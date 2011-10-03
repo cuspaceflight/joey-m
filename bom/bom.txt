@@ -1,0 +1,19 @@
+  PART         QTY             DESCRIPTION               TYPE            LIST
+  ==========================================================================
+1753785         2 	 RF TUNING VARACTOR DIODE  	 SC79     	 £0.45
+1189327 	1 	 VARIABLE CAPACITOR 5-20pF 	 CTZ2      	 £0.62
+1865473 	2 	 CAPACITOR 13pF 50V        	 0603      	 £0.01
+1294515         1 	 CAPACITOR 9.1pF      	         0603      	 £0.05
+1841971 	1 	 13.560MHz XTAL 5x3mm      	 SMD       	 £0.59
+1627775         2 	 RESISTOR 63mW 10KR        	 0603      	 £0.03
+1738931         2 	 RESISTOR 0.1W 100KR       	 0603      	 £0.02
+1494165 	1 	 MICREL MICRF112YMM UHF    	 MSOP10    	 £3.28
+1833863         2 	 CAPACITOR 100nF           	 0603      	 £0.01
+9406115         1 	 CAPACITOR 100pF           	 0603      	 £0.02
+1463375         1 	 CAPACITOR 10uF            	 0603      	 £0.45
+721852  	1 	 CAPACITOR 1.2pF           	 0603      	 £0.03
+1650758         1 	 CAPACITOR 2.2pF           	 0603      	 £0.06
+8819807         1 	 CAPACITOR 6.8pF           	 0603      	 £0.04
+1748739         1 	 INDUCTOR 43nH             	 0402      	 £0.28
+1343111 	1 	 INDUCTOR 680nH            	 0603      	 £0.16
+1668492         1 	 4x1 HEADER PC BOARD       	 PTH       	 £0.47
