@@ -10,6 +10,7 @@
 1652477         1        TMP102 IC, TEMPERATURE          SOT563          £2.86
 1330944         1        DAC, DUAL 16-BIT                MSOP8           £8.88
 1098611         1        TERMINAL BLOCK, 2WAY            PTH             £0.21
+9492615         1        JST, SIDE ENT, 2WAY             SMD             £0.34
 --
 1865473 	2 	 CAPACITOR 13pF 50V        	 0603      	 £0.01
 1294515         1 	 CAPACITOR 9.1pF      	         0603      	 £0.05
