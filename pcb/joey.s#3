@@ -8961,16 +8961,6 @@ DIN A3, landscape with extra doc field</description>
 </net>
 <net name="COARSE" class="0">
 <segment>
-<wire x1="76.2" y1="19.05" x2="80.01" y2="19.05" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="19.05" x2="76.2" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="25.4" x2="64.77" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="19.05" x2="76.2" y2="19.05" width="0.1524" layer="91"/>
-<junction x="76.2" y="19.05"/>
-<pinref part="C22" gate="G$1" pin="1"/>
-<pinref part="R5" gate="G$1" pin="2"/>
-<pinref part="SMV1236-1" gate="G$1" pin="C"/>
-</segment>
-<segment>
 <wire x1="54.61" y1="25.4" x2="52.07" y2="25.4" width="0.1524" layer="91"/>
 <label x="52.07" y="25.4" size="1.27" layer="95" rot="R180" xref="yes"/>
 <pinref part="R5" gate="G$1" pin="1"/>
@@ -9301,6 +9291,18 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="U1" gate="G$1" pin="PD5(T1)"/>
 <wire x1="-44.45" y1="-91.44" x2="-41.91" y2="-91.44" width="0.1524" layer="91"/>
 <label x="-41.91" y="-91.44" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="COARSE_V" class="0">
+<segment>
+<wire x1="76.2" y1="19.05" x2="80.01" y2="19.05" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="19.05" x2="76.2" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="25.4" x2="64.77" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="19.05" x2="76.2" y2="19.05" width="0.1524" layer="91"/>
+<junction x="76.2" y="19.05"/>
+<pinref part="C22" gate="G$1" pin="1"/>
+<pinref part="R5" gate="G$1" pin="2"/>
+<pinref part="SMV1236-1" gate="G$1" pin="C"/>
 </segment>
 </net>
 </nets>

@@ -7780,7 +7780,6 @@ http://www.u-blox.com/images/downloads/Product_Docs/NEO-6_DataSheet_%28GPS.G6-HW
 <smd name="3_TIMEPULSE" x="6.4" y="-5.2" dx="0.8" dy="1.8" layer="1" rot="R90"/>
 <smd name="2_SS_N" x="6.4" y="-6.3" dx="0.8" dy="1.8" layer="1" rot="R90"/>
 <smd name="1_RESERVED" x="6.4" y="-7.4" dx="0.8" dy="1.8" layer="1" rot="R90"/>
-<text x="4.29" y="0.9" size="1.016" layer="21" rot="R180">ublox NEO-6</text>
 </package>
 </packages>
 <symbols>

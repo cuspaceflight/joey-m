@@ -8872,8 +8872,8 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="C13" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<wire x1="-92.71" y1="-55.88" x2="-95.25" y2="-55.88" width="0.1524" layer="91"/>
-<label x="-95.25" y="-55.88" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="-92.71" y1="-55.88" x2="-105.41" y2="-55.88" width="0.1524" layer="91"/>
+<label x="-105.41" y="-55.88" size="1.27" layer="95" rot="R180" xref="yes"/>
 <pinref part="U1" gate="G$1" pin="PC6(/RESET)"/>
 </segment>
 </net>
