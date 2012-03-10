@@ -1,27 +1,45 @@
   PART         QTY             DESCRIPTION               TYPE            LIST
   ==========================================================================
-1494165 	1 	 MICREL MICRF112YMM UHF    	 MSOP10    	 £3.28
-1753780         1 	 RF VARACTOR DIODE SMV1232  	 SC79     	 £0.74
-1753783         1 	 RF VARACTOR DIODE SMV1236  	 SOD-323     	 £0.54
-1858064         1        IC, LDO, 3.3V, 0.3A, 5TSOT      5-TSOT          £0.89
-1269406         1        ESD PROTECTION, SMD             SOT-23-6        £0.56
-1331296         1        24AA32A I2C EEPROM              MSOP8           £0.40
-1342651         1        JACK SMA, END LAUNCH            BULKHEAD        £2.93
-1652477         1        TMP102 IC, TEMPERATURE          SOT563          £2.86
-1330944         1        DAC, DUAL 16-BIT                MSOP8           £8.88
-1098611         1        TERMINAL BLOCK, 2WAY            PTH             £0.21
-9492615         1        JST, SIDE ENT, 2WAY             SMD             £0.34
---
-1865473 	2 	 CAPACITOR 13pF 50V        	 0603      	 £0.01
-1294515         1 	 CAPACITOR 9.1pF      	         0603      	 £0.05
-1841971 	1 	 13.56MHz XTAL 5x3mm      	 SMD       	 £0.59
-1627775         2 	 RESISTOR 63mW 10KR        	 0603      	 £0.03
-1738931         2 	 RESISTOR 0.1W 100KR       	 0603      	 £0.02
-1833863         2 	 CAPACITOR 100nF           	 0603      	 £0.01
-9406115         1 	 CAPACITOR 100pF           	 0603      	 £0.02
-1463375         1 	 CAPACITOR 10uF            	 0603      	 £0.45
-721852  	1 	 CAPACITOR 1.2pF           	 0603      	 £0.03
-1650758         1 	 CAPACITOR 2.2pF           	 0603      	 £0.06
-8819807         1 	 CAPACITOR 6.8pF           	 0603      	 £0.04
-1748739         1 	 INDUCTOR 43nH             	 0402      	 £0.28
-1343111 	1 	 INDUCTOR 680nH            	 0603      	 £0.16
+1715486         1       ATMEL AVR ATMEGA328             TQFP32          £4.25
+1494165 	1 	MICREL MICRF112YMM UHF    	MSOP10    	£3.28
+1753780         1 	RF VARACTOR DIODE SMV1232  	SC79     	£0.74
+1753783         1 	RF VARACTOR DIODE SMV1236  	SOD-323     	£0.54
+1858064         2       IC, LDO, 3.3V, 0.3A, 5TSOT      5-TSOT          £0.89
+1269406         1       ESD PROTECTION, SMD             SOT-23-6        £0.56
+1331296         1       24AA32A I2C EEPROM              MSOP8           £0.40
+1342651         1       JACK SMA, END LAUNCH            BULKHEAD        £2.93
+1652477         1       TMP102 IC, TEMPERATURE          SOT563          £2.86
+1330944         1       DAC, DUAL 16-BIT                MSOP8           £8.88
+1098611         1       TERMINAL BLOCK, 2WAY            PTH             £0.21
+9492615         1       JST, SIDE ENT, 2WAY             SMD             £0.34
+1521869         1       MICRO USB AB RECEPT             SMD             £0.67
+1248132         1       ICSP HEADER 2x3 PTH 0.1"        PTH             £0.24
+1841236         1       HEADER, 2.54MM, PIN, 32WAY      PTH             £1.88
+1841971 	1 	13.56MHz XTAL 5x3mm      	SMD       	£0.59
+1640930         1       16.00MHz XTAL 5.3mm             SMD             £1.62
+-- PASSIVES
+1627775         3 	RESISTOR 63mW 10KR        	0603      	£0.03
+1738931         2 	RESISTOR 0.1W 100KR       	0603      	£0.02
+9330364         2       RESISTOR 100R                   0603            £
+2008367         2       RESISTOR 1MR                    0603            £0.01
+2008358         4       RESISTOR 4K7                    0603            £0.01
+2008345         2       RESISTOR 22R                    0603            £0.01
+1833863         8 	CAPACITOR 100nF           	0603      	£0.01
+1463375         1 	CAPACITOR 10uF            	0603      	0.45
+1833809         4       CAPACITOR 1UF                   0603            £0.02
+1327675         1       CAPACITOR 10NF                  0603            £0.02
+1748739         1 	INDUCTOR 43nH             	0402      	£0.28
+1343111 	1 	INDUCTOR 680nH            	0603      	£0.16
+1328308         1       LED RED                         0603            £
+1320806         1       LED GREEN                       0603            £
+-- C0G CAPS
+1865478         1       CAPACITOR 36PF                  0603            £0.01
+1828907         1       CAPACITOR 12PF                  0603            £0.01
+1865514         3       CAPACITOR 18PF                  0603            £0.02
+1865503         1       CAPACITOR 6.8PF                 0603            £0.04
+1457729         1       CAPACITOR 1.2PF                 0603            £0.13
+1813415         1       CAPACITOR 2.2PF                 0603            £0.03
+9406115         1       CAPACITOR 100PF                 0603            £0.02
+-- OTHER
+SARANTEL SL1202 ANTENNA
+UBLOX NEO-6Q GPS

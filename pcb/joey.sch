@@ -8009,7 +8009,7 @@ DIN A3, landscape with extra doc field</description>
 <part name="C17" library="rcl" deviceset="C-EU" device="C0603" value="18pF"/>
 <part name="C18" library="rcl" deviceset="C-EU" device="C0603" value="18pF"/>
 <part name="GND15" library="SparkFun" deviceset="GND" device=""/>
-<part name="C22" library="rcl" deviceset="C-EU" device="C0603" value="35pF"/>
+<part name="C22" library="rcl" deviceset="C-EU" device="C0603" value="36pF"/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="R0603" value="1M"/>
 <part name="SMV1236-1" library="SparkFun" deviceset="DIODE" device="SOD"/>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
@@ -9256,8 +9256,6 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="-115.57" y1="-27.94" x2="-120.65" y2="-27.94" width="0.1524" layer="91"/>
 <label x="-120.65" y="-27.94" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
-</net>
-<net name="N$16" class="0">
 <segment>
 <pinref part="X1" gate="G$1" pin="VBUS"/>
 <pinref part="USB_ESD" gate="G$1" pin="VBUS"/>

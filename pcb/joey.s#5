@@ -180,8 +180,8 @@ package type OT</description>
 <wire x1="-4.01" y1="-4.548" x2="-4.01" y2="4.486" width="0.127" layer="51"/>
 <smd name="NC1" x="-3.1" y="2.7" dx="3.4" dy="1.5" layer="1" rot="R90"/>
 <smd name="NC2" x="3.1" y="2.7" dx="3.4" dy="1.5" layer="1" rot="R90"/>
-<smd name="V+" x="-1" y="-2.8" dx="3.5" dy="1" layer="1" rot="R90"/>
-<smd name="GND" x="1" y="-2.8" dx="3.5" dy="1" layer="1" rot="R90"/>
+<smd name="GND" x="-1" y="-2.8" dx="3.5" dy="1" layer="1" rot="R90"/>
+<smd name="VBATT" x="1" y="-2.8" dx="3.5" dy="1" layer="1" rot="R90"/>
 <wire x1="-2" y1="4.5" x2="2" y2="4.5" width="0.127" layer="21"/>
 <wire x1="-4" y1="0.7" x2="-4" y2="-4.5" width="0.127" layer="21"/>
 <wire x1="-4" y1="-4.5" x2="-1.8" y2="-4.5" width="0.127" layer="21"/>
@@ -450,7 +450,7 @@ package type OT</description>
 <device name="" package="JST_CONN_SMD">
 <connects>
 <connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="V+" pad="V+"/>
+<connect gate="G$1" pin="V+" pad="VBATT"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -8961,16 +8961,6 @@ DIN A3, landscape with extra doc field</description>
 </net>
 <net name="COARSE" class="0">
 <segment>
-<wire x1="76.2" y1="19.05" x2="80.01" y2="19.05" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="19.05" x2="76.2" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="25.4" x2="64.77" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="19.05" x2="76.2" y2="19.05" width="0.1524" layer="91"/>
-<junction x="76.2" y="19.05"/>
-<pinref part="C22" gate="G$1" pin="1"/>
-<pinref part="R5" gate="G$1" pin="2"/>
-<pinref part="SMV1236-1" gate="G$1" pin="C"/>
-</segment>
-<segment>
 <wire x1="54.61" y1="25.4" x2="52.07" y2="25.4" width="0.1524" layer="91"/>
 <label x="52.07" y="25.4" size="1.27" layer="95" rot="R180" xref="yes"/>
 <pinref part="R5" gate="G$1" pin="1"/>
@@ -9301,6 +9291,18 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="U1" gate="G$1" pin="PD5(T1)"/>
 <wire x1="-44.45" y1="-91.44" x2="-41.91" y2="-91.44" width="0.1524" layer="91"/>
 <label x="-41.91" y="-91.44" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="COARSE_V" class="0">
+<segment>
+<wire x1="76.2" y1="19.05" x2="80.01" y2="19.05" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="19.05" x2="76.2" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="25.4" x2="64.77" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="19.05" x2="76.2" y2="19.05" width="0.1524" layer="91"/>
+<junction x="76.2" y="19.05"/>
+<pinref part="C22" gate="G$1" pin="1"/>
+<pinref part="R5" gate="G$1" pin="2"/>
+<pinref part="SMV1236-1" gate="G$1" pin="C"/>
 </segment>
 </net>
 </nets>
