@@ -31,7 +31,7 @@
 1748739         1 	INDUCTOR 43nH             	0402      	£0.28
 1343111 	1 	INDUCTOR 680nH            	0603      	£0.16
 1328308         1       LED RED                         0603            £
-1320806         1       LED GREEN                       0603            £
+1328306         1       LED GREEN                       0603            £
 -- C0G CAPS
 1865478         1       CAPACITOR 36PF                  0603            £0.01
 1828907         1       CAPACITOR 12PF                  0603            £0.01
