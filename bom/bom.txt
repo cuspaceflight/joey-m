@@ -18,7 +18,7 @@
 1841971 	1 	13.56MHz XTAL 5x3mm      	SMD       	£0.59
 1640930         1       16.00MHz XTAL 5.3mm             SMD             £1.62
 -- PASSIVES
-1627775         3 	RESISTOR 63mW 10KR        	0603      	£0.03
+1469748         3       RESISTOR 10KR 0.1W              0603            £0.01
 1738931         2 	RESISTOR 0.1W 100KR       	0603      	£0.02
 9330364         2       RESISTOR 100R                   0603            £
 2008367         2       RESISTOR 1MR                    0603            £0.01

@@ -155,7 +155,7 @@
 </polygon>
 <text x="12.192" y="41.91" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">v1.0</text>
 <text x="14.732" y="44.45" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">JOEY-M</text>
-<text x="14.732" y="39.116" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">MAR '12</text>
+<text x="37.338" y="44.45" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">MAR '12</text>
 <text x="36.068" y="28.702" size="1.27" layer="22" font="vector" ratio="15" rot="MR180">GRN</text>
 <text x="36.068" y="11.43" size="1.27" layer="22" font="vector" ratio="15" rot="MR180">BLK</text>
 <text x="29.21" y="4.572" size="1.27" layer="21" font="vector" ratio="15" rot="R90">ICSP</text>
@@ -165,6 +165,8 @@
 <text x="5.588" y="29.21" size="1.27" layer="21" font="vector" ratio="15" rot="R90">BATT</text>
 <text x="27.432" y="31.75" size="1.27" layer="21" font="vector" ratio="15" rot="R90">NEO-6Q</text>
 <text x="39.37" y="33.02" size="1.27" layer="21" font="vector" ratio="15" rot="R90">USB</text>
+<text x="36.83" y="34.544" size="2.54" layer="22" ratio="15" rot="MR0">CU SPACEFLIGHT</text>
+<text x="32.258" y="31.242" size="1.778" layer="22" ratio="15" rot="MR0">http://cusf.co.uk</text>
 </plain>
 <libraries>
 <library name="jonsowman">
