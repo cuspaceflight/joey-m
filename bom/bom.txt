@@ -35,7 +35,7 @@
 -- C0G CAPS
 1865478         1       CAPACITOR 36PF                  0603            £0.01
 1828907         1       CAPACITOR 12PF                  0603            £0.01
-1865514         3       CAPACITOR 18PF                  0603            £0.02
+1414620         3       CAPACITOR 18PF                  0603            £0.03
 1865503         1       CAPACITOR 6.8PF                 0603            £0.04
 1457729         1       CAPACITOR 1.2PF                 0603            £0.13
 1813415         1       CAPACITOR 2.2PF                 0603            £0.03
