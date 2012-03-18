@@ -20,8 +20,11 @@
 #define RADIO_EN_DDR    DDRC
 #define RADIO_EN_PORT   PORTC
 
-#define RADIO_SS_PORT   PORTB
-#define RADIO_SS_DDR    DDRB
+#define RADIO_PORT      PORTB
+#define RADIO_DDR       DDRB
+#define RADIO_MOSI      3
+#define RADIO_MISO      4
+#define RADIO_SCK       5
 #define RADIO_SS        2
 
 #define RADIO_DAC_A     0

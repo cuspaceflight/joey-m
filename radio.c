@@ -18,21 +18,16 @@
 void radio_init(void)
 {
     // Configure the slave select pin and set it high
-    RADIO_SS_DDR |= _BV(RADIO_SS);
-    RADIO_SS_PORT |= _BV(RADIO_SS);
-
-    // Set MOSI and SCK as output, MISO as input
-    RADIO_SS_DDR |= _BV(3) | _BV(5);
-    RADIO_SS_DDR &= ~(_BV(4));
+    RADIO_DDR |= _BV(RADIO_SS) | _BV(RADIO_MOSI) | _BV(RADIO_SCK);
+    RADIO_DDR &= ~(_BV(RADIO_MISO));
+    RADIO_PORT |= _BV(RADIO_SS);
 
     // Set MSB first, sample on rising edge, 
     // clock idles low
     SPCR &= ~(_BV(DORD) | _BV(CPOL) | _BV(CPHA));
 
-    // Disable SCK frequency double
+    // Enable SPI, set master mode and fosc/16
     SPSR |= _BV(SPI2X);
-
-    // Enable SPI, set master mode and fosc/64
     SPCR |= _BV(SPR0) | _BV(MSTR) | _BV(SPE);
 }
 
@@ -60,7 +55,7 @@ void radio_disable(void)
 void _radio_dac_write(uint8_t channel, uint16_t value)
 {
     // Take SS low
-    RADIO_SS_PORT &= ~(_BV(RADIO_SS));
+    RADIO_PORT &= ~(_BV(RADIO_SS));
 
     // Construct the command and address byte
     uint8_t cmd = 0x30 | (channel & 0x01);
@@ -77,5 +72,25 @@ void _radio_dac_write(uint8_t channel, uint16_t value)
     while(!(SPSR & _BV(SPIF)));
 
     // Raise SS to signal end of transaction
-    RADIO_SS_PORT |= _BV(RADIO_SS);
+    RADIO_PORT |= _BV(RADIO_SS);
+}
+
+/**
+ * Power down the DAC and set the outputs to a high-Z state
+ */
+void _radio_dac_off(void)
+{
+    // Take SS low
+    RADIO_PORT &= ~(_BV(RADIO_SS));
+
+    // Write cmd then value to the SPI data register
+    SPDR = 0x4F;
+    while(!(SPSR & _BV(SPIF)));
+    SPDR = 0;
+    while(!(SPSR & _BV(SPIF)));
+    SPDR = 0;
+    while(!(SPSR & _BV(SPIF)));
+
+    // Raise SS to signal end of transaction
+    RADIO_PORT |= _BV(RADIO_SS);
 }

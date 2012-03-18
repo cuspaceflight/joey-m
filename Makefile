@@ -14,7 +14,7 @@
 DEVICE     = m328p
 CLOCK      = 16000000
 PROGRAMMER = -c avrispmkII -P usb -B 5
-OBJECTS	   = main.o led.o radio.c
+OBJECTS	   = main.o led.o radio.o
 FUSES      = -U hfuse:w:0xd7:m -U lfuse:w:0xf7:m
 
 # End configuration

@@ -18,14 +18,15 @@ int main()
     led_init();
     radio_init();
     radio_enable();
+    _radio_dac_off();
+    _delay_ms(1000);
 
     while(true) {
         led_set(LED_RED, 1);
-        _radio_dac_write(RADIO_COARSE, 0x00);
-        _delay_ms(500);
+        _radio_dac_write(RADIO_COARSE, 0x0);
+        _delay_ms(1000);
         led_set(LED_RED, 0);
-        _radio_dac_write(RADIO_COARSE, 0x7FFF);
-        _delay_ms(500);
+        _delay_ms(1000);
     }
 
     return 0;
