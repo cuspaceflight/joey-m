@@ -15,6 +15,8 @@
 
 // 30kHz range on COARSE, 3kHz on FINE
 
+char s[30];
+
 int main()
 {
     led_init();
@@ -25,13 +27,15 @@ int main()
     _delay_ms(1000);
 
     _radio_dac_write(RADIO_COARSE, 0x0000);
+    radio_set_shift(0x0D00);
+
+    strcpy(s, "HELLO WORLD FROM JOEY");
 
     while(true)
     {
-//        led_set(LED_RED, 1);
-        _delay_ms(1000);
-//        led_set(LED_RED, 0);
-        _delay_ms(1000);
+        led_set(LED_RED, 1);
+        radio_transmit_string(s);
+        led_set(LED_RED, 0);
     }
 
     return 0;

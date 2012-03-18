@@ -13,6 +13,8 @@
 #include "led.h"
 
 uint16_t _dac_value = 0x0000;
+uint16_t _radio_shift = 0x0000;
+uint16_t _delay = 20;
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -38,11 +40,11 @@ void radio_init(void)
     TCCR0A |= _BV(WGM01);
 
     // Prescale by 1024
-    TCCR0B |= _BV(CS02) | _BV(CS00);
+    //TCCR0B |= _BV(CS02) | _BV(CS00);
 
     // Interrupt on compare match with OCR0A
     TIMSK0 |= _BV(OCIE0A);
-    OCR0A = 0xFF;
+    OCR0A = 156;
 
     // Enable global interrupts
     sei();
@@ -109,6 +111,45 @@ void _radio_dac_off(void)
     RADIO_PORT |= _BV(RADIO_SS);
 }
 
+void radio_transmit_string(char* string, uint8_t len)
+{
+    while(*string)
+    {
+        _radio_transmit_byte(*string);
+        string++;
+    }
+    _radio_transmit_byte('\n');
+}
+
+void _radio_transmit_byte(char data)
+{
+    // Start bit
+    _radio_dac_write(RADIO_FINE, 0x0000);
+    _delay_ms(_delay);
+
+    // Write the data bits
+    uint8_t i = 0;
+    for(i = 0; i < 8; i++)
+    {
+        if( (data >> i) & 0x01 )
+            _radio_dac_write(RADIO_FINE, _radio_shift);
+        else
+            _radio_dac_write(RADIO_FINE, 0x0000);
+        _delay_ms(_delay);
+    }
+
+    // And two stop bits
+    _radio_dac_write(RADIO_FINE, _radio_shift);
+    _delay_ms(_delay);
+    _radio_dac_write(RADIO_FINE, _radio_shift);
+    _delay_ms(_delay);
+}
+
+void radio_set_shift(uint16_t shift)
+{
+    _radio_shift = shift;
+}
+
 /**
  * Interrupt handle for the radio timer
  */
@@ -116,5 +157,4 @@ ISR(TIMER0_COMPA_vect)
 {
     _radio_dac_write(RADIO_FINE, _dac_value);
     _dac_value = 0x0F00 - _dac_value;
-    return 0;
 }
