@@ -8,8 +8,11 @@
 
 #include <avr/io.h>
 #include <avr/delay.h>
+#include <avr/interrupt.h>
 #include "global.h"
 #include "led.h"
+
+uint16_t _dac_value = 0x0000;
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -29,6 +32,20 @@ void radio_init(void)
     // Enable SPI, set master mode and fosc/16
     SPSR |= _BV(SPI2X);
     SPCR |= _BV(SPR0) | _BV(MSTR) | _BV(SPE);
+
+    // Set up TIMER0 to tick once per symbol and interrupt
+    // CTC mode
+    TCCR0A |= _BV(WGM01);
+
+    // Prescale by 1024
+    TCCR0B |= _BV(CS02) | _BV(CS00);
+
+    // Interrupt on compare match with OCR0A
+    TIMSK0 |= _BV(OCIE0A);
+    OCR0A = 0xFF;
+
+    // Enable global interrupts
+    sei();
 }
 
 /**
@@ -60,12 +77,9 @@ void _radio_dac_write(uint8_t channel, uint16_t value)
     // Construct the command and address byte
     uint8_t cmd = 0x30 | (channel & 0x01);
 
-    led_set(LED_GREEN, 1);
-
     // Write cmd then value to the SPI data register
     SPDR = cmd;
     while(!(SPSR & _BV(SPIF)));
-    led_set(LED_GREEN, 0);
     SPDR = value >> 8;
     while(!(SPSR & _BV(SPIF)));
     SPDR = value & 0xFF;
@@ -93,4 +107,14 @@ void _radio_dac_off(void)
 
     // Raise SS to signal end of transaction
     RADIO_PORT |= _BV(RADIO_SS);
+}
+
+/**
+ * Interrupt handle for the radio timer
+ */
+ISR(TIMER0_COMPA_vect)
+{
+    _radio_dac_write(RADIO_FINE, _dac_value);
+    _dac_value = 0x0F00 - _dac_value;
+    return 0;
 }

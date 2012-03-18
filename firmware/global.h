@@ -14,8 +14,6 @@
 #define LED_RED         1
 #define LED_GREEN       0
 
-#define RADIO_COURSE
-#define RADIO_FINE
 #define RADIO_EN        2
 #define RADIO_EN_DDR    DDRC
 #define RADIO_EN_PORT   PORTC
@@ -29,7 +27,9 @@
 
 #define RADIO_DAC_A     0
 #define RADIO_DAC_B     1
-#define RADIO_FINE      RADIO_DAC_A
-#define RADIO_COARSE    RADIO_DAC_B
+#define RADIO_FINE      RADIO_DAC_B
+#define RADIO_COARSE    RADIO_DAC_A
+
+#define RADIO_BAUD_50   
 
 #endif /* __GLOBAL_H__ */

@@ -13,19 +13,24 @@
 #include "radio.h"
 #include "global.h"
 
+// 30kHz range on COARSE, 3kHz on FINE
+
 int main()
 {
     led_init();
+    led_set(LED_GREEN, 1);
     radio_init();
     radio_enable();
     _radio_dac_off();
     _delay_ms(1000);
 
-    while(true) {
-        led_set(LED_RED, 1);
-        _radio_dac_write(RADIO_COARSE, 0x0);
+    _radio_dac_write(RADIO_COARSE, 0x0000);
+
+    while(true)
+    {
+//        led_set(LED_RED, 1);
         _delay_ms(1000);
-        led_set(LED_RED, 0);
+//        led_set(LED_RED, 0);
         _delay_ms(1000);
     }
 
