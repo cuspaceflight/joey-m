@@ -1873,9 +1873,9 @@ design rules under a new name.</description>
 <wire x1="36.322" y1="42.164" x2="36.322" y2="42.792" width="0.254" layer="1"/>
 <wire x1="34.925" y1="33.655" x2="35.336" y2="33.244" width="0.254" layer="1"/>
 <wire x1="35.336" y1="33.244" x2="35.958" y2="33.244" width="0.254" layer="1"/>
-<wire x1="33.528" y1="24.003" x2="35.687" y2="24.003" width="0.3048" layer="1"/>
-<wire x1="35.687" y1="24.003" x2="35.814" y2="24.13" width="0.3048" layer="1"/>
-<wire x1="35.814" y1="24.13" x2="35.814" y2="33.1" width="0.3048" layer="1"/>
+<wire x1="33.528" y1="24.003" x2="35.433" y2="24.003" width="0.3048" layer="1"/>
+<wire x1="35.433" y1="24.003" x2="35.814" y2="24.384" width="0.3048" layer="1"/>
+<wire x1="35.814" y1="24.384" x2="35.814" y2="33.1" width="0.3048" layer="1"/>
 <wire x1="35.814" y1="33.1" x2="35.958" y2="33.244" width="0.3048" layer="1"/>
 </signal>
 <signal name="N$18">
@@ -1946,28 +1946,6 @@ design rules under a new name.</description>
 <wire x1="8.294" y1="22.606" x2="9.056" y2="21.844" width="0.3048" layer="1"/>
 </signal>
 </signals>
-<errors>
-<approved hash="3,1,fe51de8a5e877e5c"/>
-<approved hash="3,1,f820dd195d14782d"/>
-<approved hash="3,1,fab7dbe85be57aba"/>
-<approved hash="3,1,f3c2d03b503673cf"/>
-<approved hash="3,1,f173d5b455b9717e"/>
-<approved hash="3,1,66424699c692e649"/>
-<approved hash="3,1,6033450ac501e038"/>
-<approved hash="3,1,62a443fbc3f0e2af"/>
-<approved hash="3,1,6bd14828c823ebda"/>
-<approved hash="3,1,69604da7cdace96b"/>
-<approved hash="3,1,b68afc1efc1fb68b"/>
-<approved hash="3,1,cd74fb88fb89cd75"/>
-<approved hash="3,1,5a736c8f6c8c5a70"/>
-<approved hash="3,1,bc760a8a0a8bbc77"/>
-<approved hash="3,1,218d6b196b1a218e"/>
-<approved hash="3,1,47f48d088d0947f5"/>
-<approved hash="4,1,50324a194d69788f"/>
-<approved hash="4,1,bb3c65193d5b0082"/>
-<approved hash="4,1,d3a0b499014e789d"/>
-<approved hash="4,1,698c072a197668d4"/>
-</errors>
 </board>
 </drawing>
 </eagle>

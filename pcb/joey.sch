@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -8189,7 +8189,7 @@ DIN A3, landscape with extra doc field</description>
 <instance part="SMV1232-1" gate="G$1" x="72.39" y="11.43" smashed="yes">
 <attribute name="NAME" x="59.182" y="7.62" size="1.778" layer="95"/>
 </instance>
-<instance part="GND8" gate="1" x="59.69" y="15.24" rot="R270"/>
+<instance part="GND8" gate="1" x="57.15" y="15.24" rot="R270"/>
 <instance part="C11" gate="G$1" x="144.78" y="8.89" smashed="yes" rot="R270">
 <attribute name="NAME" x="142.494" y="14.351" size="1.778" layer="95"/>
 <attribute name="VALUE" x="142.494" y="11.811" size="1.778" layer="96"/>
@@ -8633,6 +8633,17 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="43.18" y1="-110.49" x2="40.64" y2="-110.49" width="0.1524" layer="91"/>
 <pinref part="GND35" gate="1" pin="GND"/>
 </segment>
+<segment>
+<wire x1="63.5" y1="19.05" x2="63.5" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="15.24" x2="63.5" y2="11.43" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="11.43" x2="66.04" y2="11.43" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="15.24" x2="59.69" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="19.05" x2="63.5" y2="19.05" width="0.1524" layer="91"/>
+<junction x="63.5" y="15.24"/>
+<pinref part="SMV1232-1" gate="G$1" pin="ANODE"/>
+<pinref part="GND8" gate="1" pin="GND"/>
+<pinref part="SMV1236-1" gate="G$1" pin="A"/>
+</segment>
 </net>
 <net name="VCC" class="0">
 <segment>
@@ -8963,19 +8974,6 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="U1" gate="G$1" pin="PB7(XTAL2/TOSC2)"/>
 <pinref part="Y2" gate="G$1" pin="1"/>
 <pinref part="C18" gate="G$1" pin="1"/>
-</segment>
-</net>
-<net name="SMV1247-1" class="0">
-<segment>
-<wire x1="63.5" y1="19.05" x2="63.5" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="15.24" x2="63.5" y2="11.43" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="11.43" x2="66.04" y2="11.43" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="15.24" x2="62.23" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="66.04" y1="19.05" x2="63.5" y2="19.05" width="0.1524" layer="91"/>
-<junction x="63.5" y="15.24"/>
-<pinref part="SMV1232-1" gate="G$1" pin="ANODE"/>
-<pinref part="GND8" gate="1" pin="GND"/>
-<pinref part="SMV1236-1" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="COARSE" class="0">
