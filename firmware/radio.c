@@ -31,9 +31,11 @@ void radio_init(void)
     // clock idles low
     SPCR &= ~(_BV(DORD) | _BV(CPOL) | _BV(CPHA));
 
-    // Enable SPI, set master mode and fosc/16
+    // Enable SPI, set master mode and fosc/2, giving an SPI
+    // interface SCK speed of 8MHz
     SPSR |= _BV(SPI2X);
-    SPCR |= _BV(SPR0) | _BV(MSTR) | _BV(SPE);
+    SPCR &= ~(_BV(SPR0) | _BV(SPR1));
+    SPCR |= _BV(MSTR) | _BV(SPE);
 
     // Set up TIMER0 to tick once per symbol and interrupt
     // CTC mode
