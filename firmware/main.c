@@ -26,16 +26,20 @@ int main()
     _radio_dac_off();
     _delay_ms(1000);
 
-    _radio_dac_write(RADIO_COARSE, 0x0000);
+    _radio_dac_write(RADIO_COARSE, 0xf000);
     radio_set_shift(0x0D00);
+    radio_set_baud(300);
 
     strcpy(s, "HELLO WORLD FROM JOEY");
 
     while(true)
     {
         led_set(LED_RED, 1);
-        radio_transmit_string(s);
+        _radio_dac_write(RADIO_FINE, 0);
+        _delay_us(20000);
         led_set(LED_RED, 0);
+        _radio_dac_write(RADIO_FINE, 0x0600);
+        _delay_us(20000);
     }
 
     return 0;

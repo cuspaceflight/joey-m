@@ -30,6 +30,4 @@
 #define RADIO_FINE      RADIO_DAC_B
 #define RADIO_COARSE    RADIO_DAC_A
 
-#define RADIO_BAUD_50   
-
 #endif /* __GLOBAL_H__ */

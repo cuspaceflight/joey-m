@@ -14,7 +14,7 @@
 
 uint16_t _dac_value = 0x0000;
 uint16_t _radio_shift = 0x0000;
-uint16_t _delay = 20;
+uint16_t _delay = 10000;
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -125,7 +125,7 @@ void _radio_transmit_byte(char data)
 {
     // Start bit
     _radio_dac_write(RADIO_FINE, 0x0000);
-    _delay_ms(_delay);
+    _delay_us(_delay);
 
     // Write the data bits
     uint8_t i = 0;
@@ -135,19 +135,30 @@ void _radio_transmit_byte(char data)
             _radio_dac_write(RADIO_FINE, _radio_shift);
         else
             _radio_dac_write(RADIO_FINE, 0x0000);
-        _delay_ms(_delay);
+        _delay_us(_delay);
     }
 
     // And two stop bits
     _radio_dac_write(RADIO_FINE, _radio_shift);
-    _delay_ms(_delay);
+    _delay_us(_delay);
     _radio_dac_write(RADIO_FINE, _radio_shift);
-    _delay_ms(_delay);
+    _delay_us(_delay);
 }
 
+/**
+ * Set the radio shift
+ */
 void radio_set_shift(uint16_t shift)
 {
     _radio_shift = shift;
+}
+
+/**
+ * Calculate the delay required for the given baud rate and store
+ */
+void radio_set_baud(uint16_t baud)
+{
+    _delay = 1000000UL/baud;
 }
 
 /**
