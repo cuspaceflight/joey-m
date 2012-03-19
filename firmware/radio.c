@@ -81,11 +81,8 @@ void _radio_dac_write(uint8_t channel, uint16_t value)
     // Take SS low
     RADIO_PORT &= ~(_BV(RADIO_SS));
 
-    // Construct the command and address byte
-    uint8_t cmd = 0x30 | (channel & 0x01);
-
     // Write cmd then value to the SPI data register
-    SPDR = cmd;
+    SPDR = 0x30 | (channel & 0x01);
     while(!(SPSR & _BV(SPIF)));
     SPDR = value >> 8;
     while(!(SPSR & _BV(SPIF)));
