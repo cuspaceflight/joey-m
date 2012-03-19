@@ -9,12 +9,15 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 #include "global.h"
 #include "led.h"
 
 uint16_t _dac_value = 0x0000;
 uint16_t _radio_shift = 0x0000;
 uint16_t _delay = 10000;
+
+uint8_t step[8] = {0, 1, 23, 85, 171, 232, 254, 255};
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -161,6 +164,20 @@ void radio_set_shift(uint16_t shift)
 void radio_set_baud(uint16_t baud)
 {
     _delay = 1000000UL/baud;
+}
+
+/**
+ * Transition using the FIR filter
+ */
+void _radio_transition(uint16_t target)
+{
+    uint32_t delta;
+    for(uint8_t i=0; i < 8; i++)
+    {
+        delta = ((uint32_t)target * (uint32_t)step[i]) >> 8;
+        _radio_dac_write(RADIO_FINE, (uint16_t)delta);
+        _delay_us(500);
+    }
 }
 
 /**

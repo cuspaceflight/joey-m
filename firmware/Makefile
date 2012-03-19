@@ -13,12 +13,13 @@
 
 DEVICE     = m328p
 CLOCK      = 16000000
-PROGRAMMER = -c avrispmkII -P usb -B 5
-OBJECTS	   = main.o led.o radio.o
+PROGRAMMER = -c avrispmkII -P usb -B 1
+SOURCES	   = $(wildcard *.c)
 FUSES      = -U hfuse:w:0xd7:m -U lfuse:w:0xf7:m
 
 # End configuration
 
+OBJECTS = $(SOURCES:.c=.o)
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -C /etc/avrdude.conf
 
 # Disable warning of strict-aliasing since uIP type-puns
