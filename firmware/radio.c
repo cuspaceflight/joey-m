@@ -7,7 +7,7 @@
  */
 
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include "stdbool.h"
@@ -15,15 +15,20 @@
 #include "led.h"
 
 uint16_t _radio_shift = 0x0000;
-uint16_t _delay = 10000;
 
 volatile uint16_t _dac_value = 0;
 volatile uint8_t sample = 0;
 volatile int32_t _transition_delta = 0;
 volatile uint16_t _transition_start = 0;
-volatile bool transition_complete = false;
+volatile bool transition_complete = true;
 
-const uint8_t step[50] = {0,  5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,  70,  75,  80,  85,  90,  95,  100,  105,  110,  115,  120,  125,  130,  135,  140,  145,  150,  155,  160,  165,  170,  175,  180,  185,  190,  195,  200,  205,  210,  215,  220,  225,  230,  235,  240,  245};
+// RTTY stuff
+volatile uint8_t systicks = 0;
+volatile uint8_t _txbyte = 0;
+volatile uint8_t _txptr = 0;
+volatile bool byte_complete = false;
+
+uint8_t EEMEM step[50] = {0,  5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,  70,  75,  80,  85,  90,  95,  100,  105,  110,  115,  120,  125,  130,  135,  140,  145,  150,  155,  160,  165,  170,  175,  180,  185,  190,  195,  200,  205,  210,  215,  220,  225,  230,  235,  240,  245};
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -51,10 +56,9 @@ void radio_init(void)
     TCCR0A |= _BV(WGM01);
 
     // Prescale by 1024
-    //TCCR0B |= _BV(CS02) | _BV(CS00);
+    TCCR0B |= _BV(CS02) | _BV(CS00);
 
     // Interrupt on compare match with OCR0A
-    TIMSK0 |= _BV(OCIE0A);
     OCR0A = 156;
 
     // Set up TIMER2 for the DSP (!) stuff
@@ -129,38 +133,17 @@ void _radio_dac_off(void)
     RADIO_PORT |= _BV(RADIO_SS);
 }
 
-void radio_transmit_string(char* string, uint8_t len)
+void radio_transmit_string(char* string)
 {
     while(*string)
     {
-        _radio_transmit_byte(*string);
+        _txbyte = *string;
+        _txptr = 0;
+        byte_complete = false;
+        TIMSK0 |= _BV(OCIE0A);
+        while(!byte_complete);
         string++;
     }
-    _radio_transmit_byte('\n');
-}
-
-void _radio_transmit_byte(char data)
-{
-    // Start bit
-    _radio_dac_write(RADIO_FINE, 0x0000);
-    _delay_us(_delay);
-
-    // Write the data bits
-    uint8_t i = 0;
-    for(i = 0; i < 8; i++)
-    {
-        if( (data >> i) & 0x01 )
-            _radio_dac_write(RADIO_FINE, _radio_shift);
-        else
-            _radio_dac_write(RADIO_FINE, 0x0000);
-        _delay_us(_delay);
-    }
-
-    // And two stop bits
-    _radio_dac_write(RADIO_FINE, _radio_shift);
-    _delay_us(_delay);
-    _radio_dac_write(RADIO_FINE, _radio_shift);
-    _delay_us(_delay);
 }
 
 /**
@@ -172,11 +155,11 @@ void radio_set_shift(uint16_t shift)
 }
 
 /**
- * Calculate the delay required for the given baud rate and store
+ * Set the baud rate by setting the compare value for TIMER0
  */
-void radio_set_baud(uint16_t baud)
+void radio_set_baud(uint8_t baud)
 {
-    _delay = 1000000UL/baud;
+    OCR0A = baud;
 }
 
 /**
@@ -193,18 +176,47 @@ void _radio_transition(uint16_t target)
 
     // Start the DSP timer interrupting
     TIMSK2 |= _BV(TOIE2);
-
-    // Wait until transition finished
-    while( !transition_complete );
 }
 
 /**
- * Interrupt handle for the radio timer
+ * Interrupt handle for the radio timer, when we reach the systicks
+ * limit we should transmit the next bit
  */
 ISR(TIMER0_COMPA_vect)
 {
-    _radio_dac_write(RADIO_FINE, _dac_value);
-    _dac_value = 0x0F00 - _dac_value;
+    if( systicks < 1 )
+    {
+        systicks++;
+    }
+    else
+    {
+        if( _txptr < 11 )
+        {
+            _radio_transmit_bit(_txbyte, _txptr);
+            _txptr++;
+        } else {
+            TIMSK0 &= ~(_BV(OCIE0A));
+            byte_complete = true;
+        }
+        systicks = 0;
+    }
+}
+
+/**
+ * Transmit a single bit at a pointer, also coping with start and 
+ * stop bits.
+ */
+void _radio_transmit_bit(uint8_t data, uint8_t ptr)
+{
+    if(ptr == 0)
+        _radio_transition(0);
+    else if(ptr >= 1 && ptr <= 8)
+        if( (data >> (ptr - 1)) & 1 )
+            _radio_transition(_radio_shift);
+        else
+            _radio_transition(0);
+    else
+        _radio_transition(_radio_shift);
 }
 
 /**
@@ -213,10 +225,9 @@ ISR(TIMER0_COMPA_vect)
  */
 ISR(TIMER2_OVF_vect)
 {
-    led_set(LED_GREEN, 1);
     if( sample < DSP_SAMPLES )
     {
-        int32_t d = _transition_delta * (int32_t)(step[sample]);
+        int32_t d = _transition_delta * (int32_t)(eeprom_read_byte(&step[sample]));
         d /= 256;
         d += (int32_t)_transition_start;
         _radio_dac_write(RADIO_FINE, (uint16_t)d);

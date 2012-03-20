@@ -30,6 +30,9 @@
 #define RADIO_FINE      RADIO_DAC_B
 #define RADIO_COARSE    RADIO_DAC_A
 
+#define RADIO_BAUD_50   156
+#define RADIO_BAUD_300  26
+
 #define DSP_SAMPLES     50
 #define DSP_OFFSET      0
 

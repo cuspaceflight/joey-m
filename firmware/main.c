@@ -6,8 +6,9 @@
  * Jon Sowman 2012
  */
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/eeprom.h>
+#include <string.h>
 #include <stdbool.h>
 
 #include "led.h"
@@ -21,23 +22,25 @@ char s[30];
 int main()
 {
     led_init();
-    led_set(LED_GREEN, 1);
     radio_init();
     radio_enable();
     _radio_dac_off();
     _delay_ms(1000);
 
+    // Set the radio shift and baud rate
+    radio_set_shift(0x0600);
+    radio_set_baud(RADIO_BAUD_300);
+
     _radio_dac_write(RADIO_COARSE, 0xf000);
     _radio_dac_write(RADIO_FINE, 0);
 
-    strcpy(s, "HELLO WORLD FROM JOEY");
+    strcpy(s, "U");
 
     while(true)
     {
         led_set(LED_RED, 1);
-        _radio_transition(0x600);
+        radio_transmit_string(s);
         led_set(LED_RED, 0);
-        _radio_transition(0);
     }
 
     return 0;
