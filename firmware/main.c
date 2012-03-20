@@ -37,7 +37,7 @@ int main()
         led_set(LED_RED, 1);
         _radio_transition(0x600);
         led_set(LED_RED, 0);
-        _delay_ms(100);
+        _radio_transition(0);
     }
 
     return 0;

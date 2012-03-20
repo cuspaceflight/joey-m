@@ -19,7 +19,7 @@ uint16_t _delay = 10000;
 
 volatile uint16_t _dac_value = 0;
 volatile uint8_t sample = 0;
-volatile uint16_t _transition_target = 0;
+volatile int32_t _transition_delta = 0;
 volatile uint16_t _transition_start = 0;
 volatile bool transition_complete = false;
 
@@ -188,7 +188,7 @@ void _radio_transition(uint16_t target)
 
     // Update the global target and initial
     _transition_start = _dac_value;
-    _transition_target = target;
+    _transition_delta = (int32_t)target - (int32_t)_transition_start;
     transition_complete = false;
 
     // Start the DSP timer interrupting
@@ -213,12 +213,13 @@ ISR(TIMER0_COMPA_vect)
  */
 ISR(TIMER2_OVF_vect)
 {
-     if( sample < DSP_SAMPLES )
+    led_set(LED_GREEN, 1);
+    if( sample < DSP_SAMPLES )
     {
-        uint32_t delta = ((uint32_t)_transition_target * (uint32_t)(step[sample]));
-        delta = delta >> 8;
-        delta += (uint32_t)_transition_start;
-        _radio_dac_write(RADIO_FINE, delta);
+        int32_t d = _transition_delta * (int32_t)(step[sample]);
+        d /= 256;
+        d += (int32_t)_transition_start;
+        _radio_dac_write(RADIO_FINE, (uint16_t)d);
         sample++;
     } else {
         TIMSK2 &= ~(_BV(TOIE2));
