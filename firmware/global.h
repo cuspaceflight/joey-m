@@ -30,4 +30,7 @@
 #define RADIO_FINE      RADIO_DAC_B
 #define RADIO_COARSE    RADIO_DAC_A
 
+#define DSP_SAMPLES     50
+#define DSP_OFFSET      0
+
 #endif /* __GLOBAL_H__ */

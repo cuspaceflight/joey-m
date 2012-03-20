@@ -10,14 +10,20 @@
 #include <avr/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include "stdbool.h"
 #include "global.h"
 #include "led.h"
 
-uint16_t _dac_value = 0x0000;
 uint16_t _radio_shift = 0x0000;
 uint16_t _delay = 10000;
 
-uint8_t step[8] = {0, 1, 23, 85, 171, 232, 254, 255};
+volatile uint16_t _dac_value = 0;
+volatile uint8_t sample = 0;
+volatile uint16_t _transition_target = 0;
+volatile uint16_t _transition_start = 0;
+volatile bool transition_complete = false;
+
+const uint8_t step[50] = {0,  5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,  70,  75,  80,  85,  90,  95,  100,  105,  110,  115,  120,  125,  130,  135,  140,  145,  150,  155,  160,  165,  170,  175,  180,  185,  190,  195,  200,  205,  210,  215,  220,  225,  230,  235,  240,  245};
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -50,6 +56,13 @@ void radio_init(void)
     // Interrupt on compare match with OCR0A
     TIMSK0 |= _BV(OCIE0A);
     OCR0A = 156;
+
+    // Set up TIMER2 for the DSP (!) stuff
+    // No clock prescale to get 62.5kHz sample rate with an 8 bit timer
+    TCCR2B |= _BV(CS20);
+
+    // Do not interrupt on overflow for now
+    TIMSK2 &= ~(_BV(TOIE2));
 
     // Enable global interrupts
     sei();
@@ -91,6 +104,9 @@ void _radio_dac_write(uint8_t channel, uint16_t value)
 
     // Raise SS to signal end of transaction
     RADIO_PORT |= _BV(RADIO_SS);
+
+    // Update the DAC value
+    if(channel == RADIO_FINE) _dac_value = value;
 }
 
 /**
@@ -168,13 +184,18 @@ void radio_set_baud(uint16_t baud)
  */
 void _radio_transition(uint16_t target)
 {
-    uint32_t delta;
-    for(uint8_t i=0; i < 8; i++)
-    {
-        delta = ((uint32_t)target * (uint32_t)step[i]) >> 8;
-        _radio_dac_write(RADIO_FINE, (uint16_t)delta);
-        _delay_us(500);
-    }
+    if( _dac_value == target ) return;
+
+    // Update the global target and initial
+    _transition_start = _dac_value;
+    _transition_target = target;
+    transition_complete = false;
+
+    // Start the DSP timer interrupting
+    TIMSK2 |= _BV(TOIE2);
+
+    // Wait until transition finished
+    while( !transition_complete );
 }
 
 /**
@@ -184,4 +205,24 @@ ISR(TIMER0_COMPA_vect)
 {
     _radio_dac_write(RADIO_FINE, _dac_value);
     _dac_value = 0x0F00 - _dac_value;
+}
+
+/**
+ * Interrupt handler for the DSP timer. Read out the next step
+ * response value and write it to the DAC.
+ */
+ISR(TIMER2_OVF_vect)
+{
+     if( sample < DSP_SAMPLES )
+    {
+        uint32_t delta = ((uint32_t)_transition_target * (uint32_t)(step[sample]));
+        delta = delta >> 8;
+        delta += (uint32_t)_transition_start;
+        _radio_dac_write(RADIO_FINE, delta);
+        sample++;
+    } else {
+        TIMSK2 &= ~(_BV(TOIE2));
+        sample = 0;
+        transition_complete = true;
+    }
 }

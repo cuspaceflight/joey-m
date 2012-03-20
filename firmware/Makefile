@@ -43,6 +43,7 @@ all:	main.hex
 
 flash:	all
 	$(AVRDUDE) -U flash:w:main.hex:i
+	$(AVRDUDE) -U eeprom:w:main.eep:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
@@ -55,7 +56,7 @@ load: all
 	bootloadHID main.hex
 
 clean:
-	rm -f main.hex main.elf $(OBJECTS)
+	rm -f main.hex main.elf main.eep $(OBJECTS)
 
 # file targets:
 main.elf: $(OBJECTS)
@@ -65,6 +66,7 @@ main.elf: $(OBJECTS)
 main.hex: main.elf
 	rm -f main.hex
 	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
+	avr-objcopy -j .eeprom -O ihex main.elf main.eep
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
