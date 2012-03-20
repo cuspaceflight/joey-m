@@ -14,6 +14,7 @@
 #include "led.h"
 #include "radio.h"
 #include "global.h"
+#include "gps.h"
 
 // 30kHz range on COARSE, 3kHz on FINE
 
@@ -23,8 +24,8 @@ int main()
 {
     led_init();
     radio_init();
+    gps_init();
     radio_enable();
-    _radio_dac_off();
     _delay_ms(1000);
 
     // Set the radio shift and baud rate
@@ -34,13 +35,19 @@ int main()
     _radio_dac_write(RADIO_COARSE, 0xf000);
     _radio_dac_write(RADIO_FINE, 0);
 
-    strcpy(s, "U");
+    strcpy(s, "$$HELLO WORLD FROM JOEY\n");
+
+    int32_t lat = 0;
+    int32_t lon = 0;
+    uint16_t alt = 0;
 
     while(true)
     {
-        led_set(LED_RED, 1);
-        radio_transmit_string(s);
+        led_set(LED_GREEN, 1);
+        gps_get_position(&lat, &lon, &alt);
+        led_set(LED_GREEN, 0);
         led_set(LED_RED, 0);
+        _delay_ms(1000);
     }
 
     return 0;

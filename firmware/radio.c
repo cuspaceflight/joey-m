@@ -28,7 +28,10 @@ volatile uint8_t _txbyte = 0;
 volatile uint8_t _txptr = 0;
 volatile bool byte_complete = false;
 
-uint8_t EEMEM step[50] = {1, 2, 3, 5, 7, 9, 11, 14, 17, 21, 24, 29, 34, 39, 45, 51, 58, 65, 72, 80, 88, 97, 105, 114, 123, 132, 141, 150, 158, 167, 175, 183, 190, 197, 204, 210, 216, 221, 226, 231, 234, 238, 241, 244, 246, 248, 250, 252, 253, 254};
+uint8_t EEMEM step[50] = {4, 7, 11, 15, 19, 23, 28, 32, 37, 42, 47, 52, 57, 
+    62, 67, 73, 78, 84, 90, 95, 101, 107, 113, 119, 125, 130, 136, 142, 148,
+    154, 160, 165, 171, 177, 182, 188, 193, 198, 203, 208, 213, 218, 223, 227, 
+    232, 236, 240, 244, 248, 251};
 
 /**
  * Initialise the radio subsystem including the dual 16 bit 
@@ -67,6 +70,9 @@ void radio_init(void)
 
     // Do not interrupt on overflow for now
     TIMSK2 &= ~(_BV(TOIE2));
+
+    // Turn off the DAC
+    _radio_dac_off();
 
     // Enable global interrupts
     sei();
