@@ -43,6 +43,8 @@ all:	main.hex
 
 flash:	all
 	$(AVRDUDE) -U flash:w:main.hex:i
+
+eeprom: all
 	$(AVRDUDE) -U eeprom:w:main.eep:i
 
 fuse:
