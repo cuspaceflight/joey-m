@@ -18,7 +18,7 @@
 
 // 30kHz range on COARSE, 3kHz on FINE
 
-char s[30];
+char s[100];
 
 int main()
 {
@@ -35,17 +35,17 @@ int main()
     _radio_dac_write(RADIO_COARSE, 0xf000);
     _radio_dac_write(RADIO_FINE, 0);
 
-    strcpy(s, "$$HELLO WORLD FROM JOEY\n");
-
     int32_t lat = 0;
     int32_t lon = 0;
-    uint16_t alt = 0;
+    int32_t alt = 0;
 
     while(true)
     {
         led_set(LED_GREEN, 1);
-        gps_get_position(&lat, &lon, &alt);
+        uint8_t lock = gps_check_lock();
         led_set(LED_GREEN, 0);
+        sprintf(s, "$$JOEY lock is %u\n", lock);
+        radio_transmit_string(s);
         led_set(LED_RED, 0);
         _delay_ms(1000);
     }
