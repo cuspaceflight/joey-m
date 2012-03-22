@@ -44,21 +44,15 @@ void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
     // Request a NAV-POSLLH message from the GPS
     uint8_t request[8] = {0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
         0x0A};
-    for( uint8_t i = 0; i < 8; i++ )
-    {
-        UDR0 = request[i];
-        while( !( UCSR0A & (1<<UDRE0)) );
-    }
+    _gps_send_msg(request, 8);
     
     uint8_t buf[36];
     for(uint8_t i = 0; i < 36; i++)
         buf[i] = _gps_get_byte();
 
-    // Verify the sync bits
+    // Verify the sync and header bits
     if( buf[0] != 0xB5 || buf[1] != 0x62 )
         led_set(LED_RED, 1);
-
-    // Verify the packet header bytes
     if( buf[2] != 0x01 || buf[3] != 0x02 )
         led_set(LED_RED, 1);
 
@@ -79,8 +73,39 @@ void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
 }
 
 /**
+ * Get the hour, minute and second from the GPS using the NAV-TIMEUTC
+ * messsage.
+ */
+void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
+{
+    _gps_flush_buffer();
+
+    // Send a NAV-TIMEUTC message to the receiver
+    uint8_t request[8] = {0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
+        0x22, 0x67};
+    _gps_send_msg(request, 8);
+
+    // Get the message back from the GPS
+    uint8_t buf[27];
+    for(uint8_t i = 0; i < 27; i++)
+        buf[i] = _gps_get_byte();
+
+    // Verify the sync and header bits
+    if( buf[0] != 0xB5 || buf[1] != 0x62 )
+        led_set(LED_RED, 1);
+    if( buf[2] != 0x01 || buf[3] != 0x21 )
+        led_set(LED_RED, 1);
+
+    *hour = buf[21];
+    *minute = buf[22];
+    *second = buf[23];
+
+    _gps_flush_buffer();
+}
+
+/**
  * Check the navigation status to determine the quality of the
- * fix currently held by the receiver.
+ * fix currently held by the receiver with a NAV-STATUS message.
  */
 uint8_t gps_check_lock(void)
 {
@@ -90,35 +115,23 @@ uint8_t gps_check_lock(void)
     // Construct the request to the GPS
     uint8_t request[8] = {0xB5, 0x62, 0x01, 0x03, 0x00, 0x00,
         0x04, 0x0D};
-    for( uint8_t i = 0; i < 8; i++ )
-    {
-        while( !( UCSR0A & (1<<UDRE0)) );
-        UDR0 = request[i];
-    }
-    while( !(UCSR0A & (1<<UDRE0)) );
-    
-    // Now get the data back from the GPS
-    uint8_t a, b;
+    _gps_send_msg(request, 8);
 
-    // Verify the sync bits
-    a = _gps_get_byte();
-    b = _gps_get_byte();
-    if( a != 0xB5 || b != 0x62 ) led_set(LED_RED, 1);
+    // Get the message back from the GPS
+    uint8_t buf[23];
+    for(uint8_t i = 0; i < 23; i++)
+        buf[i] = _gps_get_byte();
 
-    // Verify the packet header bytes
-    a = _gps_get_byte();
-    b = _gps_get_byte();
-    if( a != 0x01 || b != 0x03 ) led_set(LED_RED, 1);
-
-    // Drop length + 4 (i.e. 5) bytes
-    for( int8_t i = 5; i >= 0; i-- ) a = _gps_get_byte();
-
-    uint8_t fix = _gps_get_byte();
+    // Verify the sync and header bits
+    if( buf[0] != 0xB5 || buf[1] != 0x62 )
+        led_set(LED_RED, 1);
+    if( buf[2] != 0x01 || buf[3] != 0x03 )
+        led_set(LED_RED, 1);
 
     // Flush the buffer
     _gps_flush_buffer();
 
-    return fix;
+    return buf[9];
 }
 
 /**
@@ -137,7 +150,20 @@ void gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
 }
 
 /**
- * Receive a single byte from the GPS and return it
+ * Send a binary message to the GPS of length len.
+ */
+void _gps_send_msg(uint8_t* data, uint8_t len)
+{
+    for(uint8_t i = 0; i < len; i++)
+    {
+        while( !( UCSR0A & (1<<UDRE0)) );
+        UDR0 = *(data + i);
+    }
+    while( !(UCSR0A & (1<<UDRE0)) );
+}
+
+/**
+ * Receive a single byte from the GPS and return it.
  */
 uint8_t _gps_get_byte(void)
 {
