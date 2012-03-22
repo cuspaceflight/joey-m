@@ -6,6 +6,7 @@
  * Jon Sowman 2012
  */
 #include <avr/io.h>
+#include <stdio.h>
 #include <util/delay.h>
 #include <avr/eeprom.h>
 #include <string.h>
@@ -42,9 +43,13 @@ int main()
     while(true)
     {
         led_set(LED_GREEN, 1);
-        uint8_t lock = gps_check_lock();
+        //uint8_t lock = gps_check_lock();
+        //sprintf(s, "$$JOEY lock is %u\n", lock);
+        //radio_transmit_string(s);
+        gps_get_position(&lat, &lon, &alt);
         led_set(LED_GREEN, 0);
-        sprintf(s, "$$JOEY lock is %u\n", lock);
+        sprintf(s, "$$JOEY %ld, %ld, %ld\n",
+            lat, lon, alt);
         radio_transmit_string(s);
         led_set(LED_RED, 0);
         _delay_ms(1000);

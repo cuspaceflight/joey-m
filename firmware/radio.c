@@ -13,6 +13,7 @@
 #include "stdbool.h"
 #include "global.h"
 #include "led.h"
+#include "radio.h"
 
 uint16_t _radio_shift = 0x0000;
 

@@ -10,6 +10,7 @@
 #include "led.h"
 #include "global.h"
 #include "gps.h"
+#include "radio.h"
 
 /**
  * Set up USART0 for communication with the uBlox GPS
@@ -45,44 +46,33 @@ void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
         0x0A};
     for( uint8_t i = 0; i < 8; i++ )
     {
-        while( !( UCSR0A & (1<<UDRE0)) );
         UDR0 = request[i];
+        while( !( UCSR0A & (1<<UDRE0)) );
     }
-    while( !(UCSR0A & (1<<UDRE0)) );
     
-    // Now get the data back from the GPS
-    uint8_t a, b;
+    uint8_t buf[36];
+    for(uint8_t i = 0; i < 36; i++)
+        buf[i] = _gps_get_byte();
 
     // Verify the sync bits
-    a = _gps_get_byte();
-    b = _gps_get_byte();
-    if( a != 0xB5 || b != 0x62 ) led_set(LED_RED, 1);
+    if( buf[0] != 0xB5 || buf[1] != 0x62 )
+        led_set(LED_RED, 1);
 
     // Verify the packet header bytes
-    a = _gps_get_byte();
-    b = _gps_get_byte();
-    if( a != 0x01 || b != 0x02 ) led_set(LED_RED, 1);
-
-    // Get length field
-    uint8_t len = _gps_get_byte();
-
-    // Skip 4 bytes
-    for( int8_t i = 3; i >= 0; i-- ) a = _gps_get_byte();
-
-    // 4 bytes of latitude (1e-7)
-    for( int8_t i = 3; i >= 0; i-- )
-        *lat |= _gps_get_byte() << (8 * i);
+    if( buf[2] != 0x01 || buf[3] != 0x02 )
+        led_set(LED_RED, 1);
 
     // 4 bytes of longitude (1e-7)
-    for( int8_t i = 3; i >= 0; i-- )
-        *lon |= _gps_get_byte() << (8 * i);
+    *lon = (int32_t)buf[10] | (int32_t)buf[11] << 8 | 
+        (int32_t)buf[12] << 16 | (int32_t)buf[13] << 24;
     
-    // Skip 4 bytes
-    for( int8_t i = 3; i >= 0; i-- ) a = _gps_get_byte();
-
+    // 4 bytes of latitude (1e-7)
+    *lat = (int32_t)buf[14] | (int32_t)buf[15] << 8 | 
+        (int32_t)buf[16] << 16 | (int32_t)buf[17] << 24;
+    
     // 4 bytes of altitude above MSL (mm)
-    for( int8_t i = 3; i >= 0; i-- )
-        *alt |= _gps_get_byte() << (8 * i);
+    *alt = (int32_t)buf[22] | (int32_t)buf[23] << 8 | 
+        (int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
 
     // Flush the rest of the packet
     _gps_flush_buffer();
@@ -124,6 +114,10 @@ uint8_t gps_check_lock(void)
     for( int8_t i = 5; i >= 0; i-- ) a = _gps_get_byte();
 
     uint8_t fix = _gps_get_byte();
+
+    // Flush the buffer
+    _gps_flush_buffer();
+
     return fix;
 }
 
