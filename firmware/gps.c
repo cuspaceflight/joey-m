@@ -135,6 +135,37 @@ uint8_t gps_check_lock(void)
 }
 
 /**
+ * Return the number of satellites the receiver is currently
+ * tracking.
+ */
+uint8_t gps_num_sats(void)
+{
+    _gps_flush_buffer();
+
+    uint8_t request = {0xB5, 0x62, 0x02, 0x10, 0x00, 0x00, 
+        0x12, 0x38};
+    _gps_send_msg(request, 8);
+
+    // Get the message back from the GPS
+    // The length of the message varies depending on the number of
+    // sats we are tracking. We should really clock in all of the
+    // message and verify the checksum. This solution is lazy.
+    uint8_t buf[13];
+    for(uint8_t i = 0; i < 13; i++)
+        buf[i] = _gps_get_byte();
+
+    // Verify the sync and header bits
+    if( buf[0] != 0xB5 || buf[1] != 0x62 )
+        led_set(LED_RED, 1);
+    if( buf[2] != 0x02 || buf[3] != 0x10 )
+        led_set(LED_RED, 1);
+
+    _gps_flush_buffer();
+
+    return buf[11];
+}
+
+/**
  * Calculate a UBX checksum using 8-bit Fletcher (RFC1145)
  */
 void gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
