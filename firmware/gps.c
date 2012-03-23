@@ -8,6 +8,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdbool.h>
 #include "led.h"
 #include "global.h"
 #include "gps.h"
@@ -65,6 +66,8 @@ void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
     // 4 bytes of altitude above MSL (mm)
     *alt = (int32_t)buf[22] | (int32_t)buf[23] << 8 | 
         (int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
+
+    if( !_gps_verify_checksum(&buf[2], 32) ) led_set(LED_RED, 1);
 }
 
 /**
@@ -92,6 +95,8 @@ void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
     *hour = buf[22];
     *minute = buf[23];
     *second = buf[24];
+
+    if( !_gps_verify_checksum(&buf[2], 24) ) led_set(LED_RED, 1);
 }
 
 /**
@@ -115,6 +120,8 @@ uint8_t gps_check_lock(void)
         led_set(LED_RED, 1);
     if( buf[2] != 0x01 || buf[3] != 0x03 )
         led_set(LED_RED, 1);
+
+    if( !_gps_verify_checksum(&buf[2], 20) ) led_set(LED_RED, 1);
 
     return buf[10];
 }
@@ -146,7 +153,22 @@ uint8_t gps_num_sats(void)
     if( buf[2] != 0x02 || buf[3] != 0x20 )
         led_set(LED_RED, 1);
 
+    // FIXME: We should check the UBX checksum here
+
     return buf[12];
+}
+
+/**
+ * Verify the checksum for the given data and length.
+ */
+bool _gps_verify_checksum(uint8_t* data, uint8_t len)
+{
+    uint8_t a, b;
+    gps_ubx_checksum(data, len, &a, &b);
+    if( a != *(data + len) || b != *(data + len + 1))
+        return false;
+    else
+        return true;
 }
 
 /**
