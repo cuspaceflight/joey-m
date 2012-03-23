@@ -40,18 +40,28 @@ int main()
     int32_t lat = 0;
     int32_t lon = 0;
     int32_t alt = 0;
+    uint8_t hour = 0;
+    uint8_t minute = 0;
+    uint8_t second = 0;
 
     while(true)
     {
         led_set(LED_GREEN, 1);
-        //uint8_t lock = gps_check_lock();
-        //sprintf(s, "$$JOEY lock is %u\n", lock);
-        //radio_transmit_string(s);
+
+        // Get information from the GPS
         gps_get_position(&lat, &lon, &alt);
+        gps_get_time(&hour, &minute, &second);
+        uint8_t lock = gps_check_lock();
+        uint8_t sats = gps_num_sats();
+
         led_set(LED_GREEN, 0);
-        sprintf(s, "$$JOEY %ld, %ld, %ld\n",
-            lat, lon, alt);
+
+        // Format the telemetry string & transmit
+        sprintf(s, "$$JOEY,%02u:%02u:%02u,%ld,%ld,%ld,%u,%x\n",
+            hour, minute, second, lat, lon, 
+            alt, sats, lock);
         radio_transmit_string(s);
+
         led_set(LED_RED, 0);
         _delay_ms(1000);
     }

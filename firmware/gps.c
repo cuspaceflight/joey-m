@@ -7,6 +7,7 @@
  */
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include "led.h"
 #include "global.h"
 #include "gps.h"
@@ -38,9 +39,6 @@ void gps_init(void)
  */
 void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
 {
-    // Flush the USART receive buffer
-    _gps_flush_buffer();
-
     // Request a NAV-POSLLH message from the GPS
     uint8_t request[8] = {0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
         0x0A};
@@ -67,27 +65,22 @@ void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
     // 4 bytes of altitude above MSL (mm)
     *alt = (int32_t)buf[22] | (int32_t)buf[23] << 8 | 
         (int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
-
-    // Flush the rest of the packet
-    _gps_flush_buffer();
 }
 
 /**
  * Get the hour, minute and second from the GPS using the NAV-TIMEUTC
- * messsage.
+ * message.
  */
 void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
 {
-    _gps_flush_buffer();
-
     // Send a NAV-TIMEUTC message to the receiver
     uint8_t request[8] = {0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
         0x22, 0x67};
     _gps_send_msg(request, 8);
 
     // Get the message back from the GPS
-    uint8_t buf[27];
-    for(uint8_t i = 0; i < 27; i++)
+    uint8_t buf[28];
+    for(uint8_t i = 0; i < 28; i++)
         buf[i] = _gps_get_byte();
 
     // Verify the sync and header bits
@@ -96,11 +89,9 @@ void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
     if( buf[2] != 0x01 || buf[3] != 0x21 )
         led_set(LED_RED, 1);
 
-    *hour = buf[21];
-    *minute = buf[22];
-    *second = buf[23];
-
-    _gps_flush_buffer();
+    *hour = buf[22];
+    *minute = buf[23];
+    *second = buf[24];
 }
 
 /**
@@ -109,17 +100,14 @@ void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
  */
 uint8_t gps_check_lock(void)
 {
-    // Flush the buffer
-    _gps_flush_buffer();
-
     // Construct the request to the GPS
     uint8_t request[8] = {0xB5, 0x62, 0x01, 0x03, 0x00, 0x00,
         0x04, 0x0D};
     _gps_send_msg(request, 8);
 
     // Get the message back from the GPS
-    uint8_t buf[23];
-    for(uint8_t i = 0; i < 23; i++)
+    uint8_t buf[24];
+    for(uint8_t i = 0; i < 24; i++)
         buf[i] = _gps_get_byte();
 
     // Verify the sync and header bits
@@ -128,22 +116,17 @@ uint8_t gps_check_lock(void)
     if( buf[2] != 0x01 || buf[3] != 0x03 )
         led_set(LED_RED, 1);
 
-    // Flush the buffer
-    _gps_flush_buffer();
-
-    return buf[9];
+    return buf[10];
 }
 
 /**
  * Return the number of satellites the receiver is currently
- * tracking.
+ * tracking using the RXM-SVSI message.
  */
 uint8_t gps_num_sats(void)
 {
-    _gps_flush_buffer();
-
-    uint8_t request[8] = {0xB5, 0x62, 0x02, 0x10, 0x00, 0x00, 
-        0x12, 0x38};
+    uint8_t request[8] = {0xB5, 0x62, 0x02, 0x20, 0x00, 0x00, 
+        0x22, 0x68};
     _gps_send_msg(request, 8);
 
     // Get the message back from the GPS
@@ -154,15 +137,16 @@ uint8_t gps_num_sats(void)
     for(uint8_t i = 0; i < 13; i++)
         buf[i] = _gps_get_byte();
 
+    // Force flush since there's a tonne of data remaining
+    _gps_flush_buffer();
+    
     // Verify the sync and header bits
     if( buf[0] != 0xB5 || buf[1] != 0x62 )
         led_set(LED_RED, 1);
-    if( buf[2] != 0x02 || buf[3] != 0x10 )
+    if( buf[2] != 0x02 || buf[3] != 0x20 )
         led_set(LED_RED, 1);
 
-    _gps_flush_buffer();
-
-    return buf[11];
+    return buf[12];
 }
 
 /**
@@ -175,8 +159,9 @@ void gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
     *ckb = 0;
     for( uint8_t i = 0; i < len; i++ )
     {
-        *cka += *(data + i);
+        *cka += *data;
         *ckb += *cka;
+        data++;
     }
 }
 
@@ -185,10 +170,12 @@ void gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
  */
 void _gps_send_msg(uint8_t* data, uint8_t len)
 {
+    _gps_flush_buffer();
     for(uint8_t i = 0; i < len; i++)
     {
         while( !( UCSR0A & (1<<UDRE0)) );
-        UDR0 = *(data + i);
+        UDR0 = *data;
+        data++;
     }
     while( !(UCSR0A & (1<<UDRE0)) );
 }
