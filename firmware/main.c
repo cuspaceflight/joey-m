@@ -38,6 +38,7 @@ int main()
     radio_set_baud(RADIO_BAUD_300);
 
     int32_t lat = 0, lon = 0, alt = 0;
+    uint32_t ticks = 0;
     uint8_t hour = 0, minute = 0, second = 0;
 
     while(true)
@@ -55,12 +56,14 @@ int main()
         // Format the telemetry string & transmit
         double lat_fmt = (double)lat / 10000000.0;
         double lon_fmt = (double)lon / 10000000.0;
+        alt /= 1000;
 
-        sprintf(s, "$$JOEY,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%u,%x\n",
-            hour, minute, second, lat_fmt, lon_fmt, alt, sats, lock);
-        radio_transmit_string(s);
+        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%u,%x",
+            ticks, hour, minute, second, lat_fmt, lon_fmt, alt, sats, lock);
+        radio_transmit_sentence(s);
 
         led_set(LED_RED, 0);
+        ticks++;
         _delay_ms(1000);
     }
 

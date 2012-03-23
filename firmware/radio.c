@@ -6,10 +6,13 @@
  * Jon Sowman 2012
  */
 
+#include <stdio.h>
+#include <string.h>
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include <util/crc16.h>
 #include "stdbool.h"
 #include "global.h"
 #include "led.h"
@@ -140,6 +143,25 @@ void _radio_dac_off(void)
     RADIO_PORT |= _BV(RADIO_SS);
 }
 
+/**
+ * Transmit the given string over the radio terminated with a checksum
+ * and a newline, compatible with the UKHAS habitat listener and parser.
+ */
+void radio_transmit_sentence(char* string)
+{
+    radio_transmit_string(string);
+    
+    // Calculate the checksum and send it
+    uint16_t checksum = radio_calculate_checksum(string);
+    char cs[7];
+    sprintf(cs, "*%04X\n", checksum);
+    radio_transmit_string(cs);
+}
+
+
+/**
+ * Transmit a null terminated string over the radio link.
+ */
 void radio_transmit_string(char* string)
 {
     while(*string)
@@ -186,6 +208,38 @@ void _radio_transition(uint16_t target)
 }
 
 /**
+ * Transmit a single bit at a pointer, also coping with start and 
+ * stop bits.
+ */
+void _radio_transmit_bit(uint8_t data, uint8_t ptr)
+{
+    if(ptr == 0)
+        _radio_transition(0);
+    else if(ptr >= 1 && ptr <= 8)
+        if( (data >> (ptr - 1)) & 1 )
+            _radio_transition(_radio_shift);
+        else
+            _radio_transition(0);
+    else
+        _radio_transition(_radio_shift);
+}
+
+/**
+ * Calculate the checksum for the radio string excluding any $ signs
+ * at the start.
+ */
+uint16_t radio_calculate_checksum(char* data)
+{
+    uint16_t i;
+    uint16_t crc = 0xFFFF;
+
+    for (i = 0; i < strlen(data); i++) {
+        if (data[i] != '$') crc = _crc_xmodem_update(crc,(uint8_t)data[i]);
+    }
+    return crc;
+}
+
+/**
  * Interrupt handle for the radio timer, when we reach the systicks
  * limit we should transmit the next bit
  */
@@ -207,23 +261,6 @@ ISR(TIMER0_COMPA_vect)
         }
         systicks = 0;
     }
-}
-
-/**
- * Transmit a single bit at a pointer, also coping with start and 
- * stop bits.
- */
-void _radio_transmit_bit(uint8_t data, uint8_t ptr)
-{
-    if(ptr == 0)
-        _radio_transition(0);
-    else if(ptr >= 1 && ptr <= 8)
-        if( (data >> (ptr - 1)) & 1 )
-            _radio_transition(_radio_shift);
-        else
-            _radio_transition(0);
-    else
-        _radio_transition(_radio_shift);
 }
 
 /**
