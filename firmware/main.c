@@ -12,6 +12,7 @@
 #include <avr/eeprom.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "led.h"
 #include "radio.h"
@@ -31,18 +32,13 @@ int main()
     _delay_ms(1000);
 
     // Set the radio shift and baud rate
+    _radio_dac_write(RADIO_COARSE, 0xf000);
+    _radio_dac_write(RADIO_FINE, 0);
     radio_set_shift(0x0600);
     radio_set_baud(RADIO_BAUD_300);
 
-    _radio_dac_write(RADIO_COARSE, 0xf000);
-    _radio_dac_write(RADIO_FINE, 0);
-
-    int32_t lat = 0;
-    int32_t lon = 0;
-    int32_t alt = 0;
-    uint8_t hour = 0;
-    uint8_t minute = 0;
-    uint8_t second = 0;
+    int32_t lat = 0, lon = 0, alt = 0;
+    uint8_t hour = 0, minute = 0, second = 0;
 
     while(true)
     {
@@ -57,9 +53,11 @@ int main()
         led_set(LED_GREEN, 0);
 
         // Format the telemetry string & transmit
-        sprintf(s, "$$JOEY,%02u:%02u:%02u,%ld,%ld,%ld,%u,%x\n",
-            hour, minute, second, lat, lon, 
-            alt, sats, lock);
+        double lat_fmt = (double)lat / 10000000.0;
+        double lon_fmt = (double)lon / 10000000.0;
+
+        sprintf(s, "$$JOEY,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%u,%x\n",
+            hour, minute, second, lat_fmt, lon_fmt, alt, sats, lock);
         radio_transmit_string(s);
 
         led_set(LED_RED, 0);
