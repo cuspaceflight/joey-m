@@ -32,6 +32,9 @@ int main()
     radio_enable();
     _delay_ms(1000);
 
+    // Set the I2C lines to Hi-Z for TMP102 testing
+    DDRC &= ~(_BV(4) | _BV(5));
+
     // Set the radio shift and baud rate
     _radio_dac_write(RADIO_COARSE, 0xf000);
     _radio_dac_write(RADIO_FINE, 0);
@@ -44,25 +47,28 @@ int main()
 
     while(true)
     {
+        // Get temperature
         led_set(LED_GREEN, 1);
+        //int16_t temperature = temperature_read();
+        int16_t temperature = 0;
 
         // Get information from the GPS
-        gps_get_position(&lat, &lon, &alt);
-        gps_get_time(&hour, &minute, &second);
         uint8_t lock = gps_check_lock();
+        if( lock == 0x02 || lock == 0x03 || lock == 0x04 )
+        {
+            gps_get_position(&lat, &lon, &alt);
+            gps_get_time(&hour, &minute, &second);
+        }
         uint8_t sats = gps_num_sats();
 
         led_set(LED_GREEN, 0);
-
-        // Get temperature
-        double temperature = (double)temperature_read() / 16;
-
+        
         // Format the telemetry string & transmit
         double lat_fmt = (double)lat / 10000000.0;
         double lon_fmt = (double)lon / 10000000.0;
         alt /= 1000;
 
-        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%02.2f,%u,%x",
+        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
             ticks, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
             sats, lock);
         radio_transmit_sentence(s);

@@ -140,8 +140,8 @@ uint8_t gps_num_sats(void)
     // The length of the message varies depending on the number of
     // sats we are tracking. We should really clock in all of the
     // message and verify the checksum. This solution is lazy.
-    uint8_t buf[13];
-    for(uint8_t i = 0; i < 13; i++)
+    uint8_t buf[15];
+    for(uint8_t i = 0; i < 15; i++)
         buf[i] = _gps_get_byte();
 
     // Force flush since there's a tonne of data remaining
@@ -153,9 +153,13 @@ uint8_t gps_num_sats(void)
     if( buf[2] != 0x02 || buf[3] != 0x20 )
         led_set(LED_RED, 1);
 
+    /*char s[20];
+    sprintf(s, "%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
+    radio_transmit_string(s);*/
+
     // FIXME: We should check the UBX checksum here
 
-    return buf[12];
+    return buf[13];
 }
 
 /**
