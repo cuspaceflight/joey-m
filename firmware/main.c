@@ -23,6 +23,7 @@
 // 30kHz range on COARSE, 3kHz on FINE
 
 char s[100];
+uint32_t EEMEM ticks = 0;
 
 int main()
 {
@@ -42,13 +43,16 @@ int main()
     radio_set_baud(RADIO_BAUD_300);
 
     int32_t lat = 0, lon = 0, alt = 0;
-    uint32_t ticks = 0;
     uint8_t hour = 0, minute = 0, second = 0, lock = 0, sats = 0;
 
     while(true)
     {
-        // Get temperature
         led_set(LED_GREEN, 1);
+
+        // Get the current system tick and increment
+        uint32_t tick = eeprom_read_dword(&ticks) + 1;
+
+        // Get temperature from the TMP102
         //int16_t temperature = temperature_read();
         int16_t temperature = 0;
 
@@ -68,12 +72,12 @@ int main()
         alt /= 1000;
 
         sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
-            ticks, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
+            tick, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
             sats, lock);
         radio_transmit_sentence(s);
 
         led_set(LED_RED, 0);
-        ticks++;
+        eeprom_update_dword(&ticks, tick);
         _delay_ms(1000);
     }
 
