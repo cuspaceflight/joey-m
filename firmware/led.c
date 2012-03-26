@@ -6,7 +6,7 @@
  * Jon Sowman 2012
  */
 #include <avr/io.h>
-#include "global.h"
+#include "led.h"
 
 void led_init()
 {   

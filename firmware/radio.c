@@ -14,7 +14,6 @@
 #include <avr/eeprom.h>
 #include <util/crc16.h>
 #include "stdbool.h"
-#include "global.h"
 #include "led.h"
 #include "radio.h"
 
@@ -89,6 +88,7 @@ void radio_enable(void)
 {
     RADIO_EN_DDR |= _BV(RADIO_EN);
     RADIO_EN_PORT |= _BV(RADIO_EN);
+    _delay_ms(100);
 }
 
 /**

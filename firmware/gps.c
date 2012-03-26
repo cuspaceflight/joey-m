@@ -10,7 +10,6 @@
 #include <util/delay.h>
 #include <stdbool.h>
 #include "led.h"
-#include "global.h"
 #include "gps.h"
 #include "radio.h"
 

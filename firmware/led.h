@@ -9,6 +9,11 @@
 #ifndef __LED_H__
 #define __LED_H__
 
+#define LED_DDR         DDRB
+#define LED_PORT        PORTB
+#define LED_RED         1
+#define LED_GREEN       0
+
 void led_init();
 void led_set();
 

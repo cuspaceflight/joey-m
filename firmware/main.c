@@ -17,7 +17,6 @@
 
 #include "led.h"
 #include "radio.h"
-#include "global.h"
 #include "gps.h"
 #include "temperature.h"
 
@@ -83,7 +82,6 @@ int main()
         led_set(LED_RED, 0);
         eeprom_update_dword(&ticks, tick);
         wdt_reset();
-        _delay_ms(1000);
     }
 
     return 0;

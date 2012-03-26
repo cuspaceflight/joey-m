@@ -8,7 +8,6 @@
 
 #include <avr/io.h>
 #include <stdio.h>
-#include "global.h"
 #include "led.h"
 #include "radio.h"
 #include "i2c.h"
