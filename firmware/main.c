@@ -43,7 +43,7 @@ int main()
 
     int32_t lat = 0, lon = 0, alt = 0;
     uint32_t ticks = 0;
-    uint8_t hour = 0, minute = 0, second = 0;
+    uint8_t hour = 0, minute = 0, second = 0, lock = 0, sats = 0;
 
     while(true)
     {
@@ -53,13 +53,12 @@ int main()
         int16_t temperature = 0;
 
         // Get information from the GPS
-        uint8_t lock = gps_check_lock();
+        gps_check_lock(&lock, &sats);
         if( lock == 0x02 || lock == 0x03 || lock == 0x04 )
         {
             gps_get_position(&lat, &lon, &alt);
             gps_get_time(&hour, &minute, &second);
         }
-        uint8_t sats = gps_num_sats();
 
         led_set(LED_GREEN, 0);
         

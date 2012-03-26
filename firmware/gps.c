@@ -36,7 +36,7 @@ void gps_init(void)
 
 /**
  * Poll the GPS for a position message then extract the useful
- * information from it.
+ * information from it - POSLLH.
  */
 void gps_get_position(int32_t* lat, int32_t* lon, int32_t* alt)
 {
@@ -103,63 +103,34 @@ void gps_get_time(uint8_t* hour, uint8_t* minute, uint8_t* second)
  * Check the navigation status to determine the quality of the
  * fix currently held by the receiver with a NAV-STATUS message.
  */
-uint8_t gps_check_lock(void)
+void gps_check_lock(uint8_t* lock, uint8_t* sats)
 {
     // Construct the request to the GPS
-    uint8_t request[8] = {0xB5, 0x62, 0x01, 0x03, 0x00, 0x00,
-        0x04, 0x0D};
+    uint8_t request[8] = {0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
+        0x07, 0x16};
     _gps_send_msg(request, 8);
 
     // Get the message back from the GPS
-    uint8_t buf[24];
-    for(uint8_t i = 0; i < 24; i++)
+    uint8_t buf[60];
+    for(uint8_t i = 0; i < 60; i++)
         buf[i] = _gps_get_byte();
 
     // Verify the sync and header bits
     if( buf[0] != 0xB5 || buf[1] != 0x62 )
         led_set(LED_RED, 1);
-    if( buf[2] != 0x01 || buf[3] != 0x03 )
+    if( buf[2] != 0x01 || buf[3] != 0x06 )
         led_set(LED_RED, 1);
 
-    if( !_gps_verify_checksum(&buf[2], 20) ) led_set(LED_RED, 1);
+    // Check 60 bytes minus SYNC and CHECKSUM (4 bytes)
+    if( !_gps_verify_checksum(&buf[2], 56) ) led_set(LED_RED, 1);
 
-    return buf[10];
-}
+    // Return the value if GPSfixOK is set in 'flags'
+    if( buf[17] & 0x01 )
+        *lock = buf[16];
+    else
+        *lock = 0;
 
-/**
- * Return the number of satellites the receiver is currently
- * tracking using the RXM-SVSI message.
- */
-uint8_t gps_num_sats(void)
-{
-    uint8_t request[8] = {0xB5, 0x62, 0x02, 0x20, 0x00, 0x00, 
-        0x22, 0x68};
-    _gps_send_msg(request, 8);
-
-    // Get the message back from the GPS
-    // The length of the message varies depending on the number of
-    // sats we are tracking. We should really clock in all of the
-    // message and verify the checksum. This solution is lazy.
-    uint8_t buf[15];
-    for(uint8_t i = 0; i < 15; i++)
-        buf[i] = _gps_get_byte();
-
-    // Force flush since there's a tonne of data remaining
-    _gps_flush_buffer();
-    
-    // Verify the sync and header bits
-    if( buf[0] != 0xB5 || buf[1] != 0x62 )
-        led_set(LED_RED, 1);
-    if( buf[2] != 0x02 || buf[3] != 0x20 )
-        led_set(LED_RED, 1);
-
-    /*char s[20];
-    sprintf(s, "%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
-    radio_transmit_string(s);*/
-
-    // FIXME: We should check the UBX checksum here
-
-    return buf[13];
+    *sats = buf[53];
 }
 
 /**
