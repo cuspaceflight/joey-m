@@ -133,6 +133,42 @@ void gps_check_lock(uint8_t* lock, uint8_t* sats)
 }
 
 /**
+ * Verify that the uBlox 6 GPS receiver is set to the <1g airborne
+ * navigaion mode.
+ */
+uint8_t gps_check_nav(void)
+{
+    uint8_t request[8] = {0xB5, 0x62, 0x06, 0x24, 0x00, 0x00,
+        0x2A, 0x84};
+    _gps_send_msg(request, 8);
+
+    // Get the message back from the GPS
+    uint8_t buf[44];
+    for(uint8_t i = 0; i < 44; i++)
+        buf[i] = _gps_get_byte();
+
+    // Verify sync and header bytes
+    if( buf[0] != 0xB5 || buf[1] != 0x62 )
+        led_set(LED_RED, 1);
+    if( buf[2] != 0x06 || buf[3] != 0x24 )
+        led_set(LED_RED, 1);
+
+    // Check 40 bytes of message checksum
+    if( !_gps_verify_checksum(&buf[2], 40) ) led_set(LED_RED, 1);
+
+    // Clock in and verify the ACK/NACK
+    uint8_t ack[10];
+    for(uint8_t i = 0; i < 10; i++)
+        ack[i] = _gps_get_byte();
+
+    // If we got a NACK, then return 0xFF
+    if( buf[3] == 0x00 ) return 0xFF;
+
+    // Return the navigation mode and let the caller analyse it
+    return buf[8];
+}
+
+/**
  * Verify the checksum for the given data and length.
  */
 bool _gps_verify_checksum(uint8_t* data, uint8_t len)
@@ -166,6 +202,7 @@ void gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
  */
 void _gps_send_msg(uint8_t* data, uint8_t len)
 {
+
     _gps_flush_buffer();
     for(uint8_t i = 0; i < len; i++)
     {

@@ -59,6 +59,9 @@ int main()
         //int16_t temperature = temperature_read();
         int16_t temperature = 0;
 
+        // Check that we're in airborne <1g mode
+        if( gps_check_nav() != 0x06 ) led_set(LED_RED, 1);
+
         // Get information from the GPS
         gps_check_lock(&lock, &sats);
         if( lock == 0x02 || lock == 0x03 || lock == 0x04 )
@@ -68,7 +71,7 @@ int main()
         }
 
         led_set(LED_GREEN, 0);
-        
+
         // Format the telemetry string & transmit
         double lat_fmt = (double)lat / 10000000.0;
         double lon_fmt = (double)lon / 10000000.0;
