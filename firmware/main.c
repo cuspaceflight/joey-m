@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <avr/wdt.h>
 
 #include "led.h"
 #include "radio.h"
@@ -27,14 +28,17 @@ uint32_t EEMEM ticks = 0;
 
 int main()
 {
+    // Disable, configure, and start the watchdog timer
+    wdt_disable();
+    wdt_reset();
+    wdt_enable(WDTO_8S);
+
+    // Start and configure all hardware peripherals
     led_init();
     radio_init();
     gps_init();
     radio_enable();
     _delay_ms(1000);
-
-    // Set the I2C lines to Hi-Z for TMP102 testing
-    DDRC &= ~(_BV(4) | _BV(5));
 
     // Set the radio shift and baud rate
     _radio_dac_write(RADIO_COARSE, 0xf000);
@@ -78,6 +82,7 @@ int main()
 
         led_set(LED_RED, 0);
         eeprom_update_dword(&ticks, tick);
+        wdt_reset();
         _delay_ms(1000);
     }
 

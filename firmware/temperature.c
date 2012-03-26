@@ -50,7 +50,7 @@ start:
     i2cSendStart();
     i2cWaitForComplete();
     uint8_t twsr = TWSR & 0xF8;
-   // if( twsr != 0x08 && twsr != 0x10 ) led_set(LED_RED, 1);
+    if( twsr != 0x08 && twsr != 0x10 ) led_set(LED_RED, 1);
 
     i2cSendByte(0b10010000);
     i2cWaitForComplete();
