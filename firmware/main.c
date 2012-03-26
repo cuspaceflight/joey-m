@@ -40,10 +40,10 @@ int main()
     _delay_ms(1000);
 
     // Set the radio shift and baud rate
-    _radio_dac_write(RADIO_COARSE, 0xf000);
+    _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_433975);
     _radio_dac_write(RADIO_FINE, 0);
-    radio_set_shift(0x0600);
-    radio_set_baud(RADIO_BAUD_300);
+    radio_set_shift(RADIO_SHIFT_425);
+    radio_set_baud(RADIO_BAUD_50);
 
     int32_t lat = 0, lon = 0, alt = 0;
     uint8_t hour = 0, minute = 0, second = 0, lock = 0, sats = 0;
@@ -82,6 +82,7 @@ int main()
         led_set(LED_RED, 0);
         eeprom_update_dword(&ticks, tick);
         wdt_reset();
+        _delay_ms(500);
     }
 
     return 0;

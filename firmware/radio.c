@@ -12,6 +12,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include <avr/wdt.h>
 #include <util/crc16.h>
 #include "stdbool.h"
 #include "led.h"
@@ -171,6 +172,7 @@ void radio_transmit_string(char* string)
         byte_complete = false;
         TIMSK0 |= _BV(OCIE0A);
         while(!byte_complete);
+        wdt_reset();
         string++;
     }
 }
