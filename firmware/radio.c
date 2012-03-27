@@ -242,6 +242,22 @@ uint16_t radio_calculate_checksum(char* data)
 }
 
 /**
+ * Make some noise on the radio on the 2FSK tones as a pre/post amble
+ * such that Joey can be easily identified.
+ */
+void radio_chatter(void)
+{
+    _radio_dac_write(RADIO_FINE, 0x0000);
+    _delay_ms(200);
+    _radio_dac_write(RADIO_FINE, _radio_shift);
+    _delay_ms(200);
+    _radio_dac_write(RADIO_FINE, 0x0000);
+    _delay_ms(200);
+    _radio_dac_write(RADIO_FINE, _radio_shift);
+    _delay_ms(200);
+}
+
+/**
  * Interrupt handle for the radio timer, when we reach the systicks
  * limit we should transmit the next bit
  */

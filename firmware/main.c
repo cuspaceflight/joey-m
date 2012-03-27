@@ -37,13 +37,17 @@ int main()
     radio_init();
     gps_init();
     radio_enable();
-    _delay_ms(1000);
 
-    // Set the radio shift and baud rate
+    // Set the radio shift and baud rate & chatter a bit so we can find Joey
     _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_433975);
     _radio_dac_write(RADIO_FINE, 0);
     radio_set_shift(RADIO_SHIFT_425);
     radio_set_baud(RADIO_BAUD_50);
+    for(uint8_t i = 0; i < 15; i++)
+    {
+        radio_chatter();
+        wdt_reset();
+    }
 
     int32_t lat = 0, lon = 0, alt = 0;
     uint8_t hour = 0, minute = 0, second = 0, lock = 0, sats = 0;
@@ -80,7 +84,9 @@ int main()
         sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
             tick, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
             sats, lock);
+        radio_chatter();
         radio_transmit_sentence(s);
+        radio_chatter();
 
         led_set(LED_RED, 0);
         eeprom_update_dword(&ticks, tick);

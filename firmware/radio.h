@@ -47,5 +47,6 @@ uint16_t radio_calculate_checksum(char* data);
 void radio_set_shift(uint16_t shift);
 void radio_set_baud(uint8_t baud);
 void _radio_transition(uint16_t target);
+void radio_chatter(void);
 
 #endif /* __RADIO_H__ */
