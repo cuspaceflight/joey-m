@@ -18,7 +18,6 @@
 #include "led.h"
 #include "radio.h"
 #include "gps.h"
-#include "temperature.h"
 
 // 30kHz range on COARSE, 3kHz on FINE
 
@@ -64,7 +63,7 @@ int main()
         int16_t temperature = 0;
 
         // Check that we're in airborne <1g mode
-        if( gps_check_nav() != 0x06 ) led_set(LED_RED, 1);
+        if( gps_check_nav() != 0x08 ) led_set(LED_RED, 1);
 
         // Get information from the GPS
         gps_check_lock(&lock, &sats);
@@ -81,7 +80,7 @@ int main()
         double lon_fmt = (double)lon / 10000000.0;
         alt /= 1000;
 
-        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
+        sprintf(s, "$$Mrtlt1Nose,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
             tick, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
             sats, lock);
         radio_chatter();
