@@ -18,7 +18,6 @@
 #include "led.h"
 #include "radio.h"
 #include "gps.h"
-#include "temperature.h"
 
 // 30kHz range on COARSE, 3kHz on FINE
 

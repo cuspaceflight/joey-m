@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -8,7 +8,7 @@
 </settings>
 <grid distance="0.01" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.005" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -23,15 +23,15 @@
 <layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="yes"/>
 <layer number="22" name="bPlace" color="11" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
@@ -52,14 +52,14 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="yes"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="6" fill="1" visible="no" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="yes"/>
@@ -153,7 +153,7 @@
 <vertex x="26.162" y="3.302"/>
 <vertex x="16.51" y="3.302"/>
 </polygon>
-<text x="12.192" y="41.91" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">v1.0</text>
+<text x="12.192" y="41.91" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">v1.1</text>
 <text x="14.732" y="44.45" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">JOEY-M</text>
 <text x="37.338" y="44.45" size="1.778" layer="22" font="vector" ratio="15" rot="MR0">MAR '12</text>
 <text x="36.068" y="28.702" size="1.27" layer="22" font="vector" ratio="15" rot="MR180">GRN</text>
@@ -1948,6 +1948,28 @@ design rules under a new name.</description>
 <wire x1="8.294" y1="22.606" x2="9.056" y2="21.844" width="0.3048" layer="1"/>
 </signal>
 </signals>
+<errors>
+<approved hash="3,1,fe51de8a5e877e5c"/>
+<approved hash="3,1,f820dd195d14782d"/>
+<approved hash="3,1,fab7dbe85be57aba"/>
+<approved hash="3,1,f3c2d03b503673cf"/>
+<approved hash="3,1,f173d5b455b9717e"/>
+<approved hash="3,1,66424699c692e649"/>
+<approved hash="3,1,6033450ac501e038"/>
+<approved hash="3,1,62a443fbc3f0e2af"/>
+<approved hash="3,1,6bd14828c823ebda"/>
+<approved hash="3,1,69604da7cdace96b"/>
+<approved hash="3,1,b68afc1efc1fb68b"/>
+<approved hash="3,1,cd74fb88fb89cd75"/>
+<approved hash="3,1,5a736c8f6c8c5a70"/>
+<approved hash="3,1,bc760a8a0a8bbc77"/>
+<approved hash="3,1,218d6b196b1a218e"/>
+<approved hash="3,1,47f48d088d0947f5"/>
+<approved hash="4,1,50324a194d69788f"/>
+<approved hash="4,1,bb3c65193d5b0082"/>
+<approved hash="4,1,d3a0b499014e789d"/>
+<approved hash="4,1,698c072a197668d4"/>
+</errors>
 </board>
 </drawing>
 </eagle>
