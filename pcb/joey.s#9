@@ -8752,9 +8752,9 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="R2" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="PD4(XCK/T0)"/>
-<wire x1="-44.45" y1="-88.9" x2="-41.91" y2="-88.9" width="0.1524" layer="91"/>
-<label x="-41.91" y="-88.9" size="1.27" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="PC2(ADC2)"/>
+<wire x1="-44.45" y1="-60.96" x2="-41.91" y2="-60.96" width="0.1524" layer="91"/>
+<label x="-41.91" y="-60.96" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="RFOUT" class="0">

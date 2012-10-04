@@ -8079,6 +8079,7 @@ DIN A3, landscape with extra doc field</description>
 <part name="C23" library="rcl" deviceset="C-EU" device="C0603" value="100nF"/>
 <part name="GND35" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+3" library="SparkFun" deviceset="VCC" device=""/>
+<part name="P+13" library="SparkFun" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8359,6 +8360,7 @@ DIN A3, landscape with extra doc field</description>
 </instance>
 <instance part="GND35" gate="1" x="38.1" y="-110.49" smashed="yes" rot="R270"/>
 <instance part="P+3" gate="1" x="52.07" y="-109.22"/>
+<instance part="P+13" gate="1" x="199.39" y="22.86"/>
 </instances>
 <busses>
 </busses>
@@ -8751,6 +8753,21 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="52.07" y1="-109.22" x2="52.07" y2="-110.49" width="0.1524" layer="91"/>
 <junction x="52.07" y="-110.49"/>
 </segment>
+<segment>
+<wire x1="179.07" y1="16.51" x2="179.07" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="179.07" y1="20.32" x2="186.69" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="186.69" y1="20.32" x2="193.04" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="20.32" x2="199.39" y2="20.32" width="0.1524" layer="91"/>
+<junction x="186.69" y="20.32"/>
+<junction x="193.04" y="20.32"/>
+<pinref part="L1" gate="G$1" pin="2"/>
+<pinref part="C2" gate="G$1" pin="2"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<pinref part="C4" gate="G$1" pin="2"/>
+<pinref part="P+13" gate="1" pin="VCC"/>
+<wire x1="199.39" y1="22.86" x2="199.39" y2="20.32" width="0.1524" layer="91"/>
+<junction x="199.39" y="20.32"/>
+</segment>
 </net>
 <net name="N$1" class="0">
 <segment>
@@ -8789,20 +8806,6 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="134.62" y1="5.08" x2="137.16" y2="5.08" width="0.1524" layer="91"/>
 <label x="137.16" y="5.08" size="1.27" layer="95" xref="yes"/>
 <pinref part="U$1" gate="G$1" pin="PAOUT"/>
-</segment>
-</net>
-<net name="N$4" class="0">
-<segment>
-<wire x1="179.07" y1="16.51" x2="179.07" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="179.07" y1="20.32" x2="186.69" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="186.69" y1="20.32" x2="193.04" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="20.32" x2="199.39" y2="20.32" width="0.1524" layer="91"/>
-<junction x="186.69" y="20.32"/>
-<junction x="193.04" y="20.32"/>
-<pinref part="L1" gate="G$1" pin="2"/>
-<pinref part="C2" gate="G$1" pin="2"/>
-<pinref part="C3" gate="G$1" pin="2"/>
-<pinref part="C4" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$6" class="0">

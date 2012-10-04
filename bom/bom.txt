@@ -8,7 +8,7 @@
 1269406         1       ESD PROTECTION, SMD             SOT-23-6        £0.56
 1331296         1       24AA32A I2C EEPROM              MSOP8           £0.40
 1342651         1       JACK SMA, END LAUNCH            BULKHEAD        £2.93
-1652477         1       TMP102 IC, TEMPERATURE          SOT563          £2.86
+1234659         1       TMP100 IC, SOT-23-6             SOT23-6         £2.22
 1330944         1       DAC, DUAL 16-BIT                MSOP8           £8.88
 1098611         1       TERMINAL BLOCK, 2WAY            PTH             £0.21
 9492615         1       JST, SIDE ENT, 2WAY             SMD             £0.34

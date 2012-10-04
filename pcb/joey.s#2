@@ -8009,7 +8009,7 @@ DIN A3, landscape with extra doc field</description>
 <part name="C17" library="rcl" deviceset="C-EU" device="C0603" value="18pF"/>
 <part name="C18" library="rcl" deviceset="C-EU" device="C0603" value="18pF"/>
 <part name="GND15" library="SparkFun" deviceset="GND" device=""/>
-<part name="C22" library="rcl" deviceset="C-EU" device="C0603" value="35pF"/>
+<part name="C22" library="rcl" deviceset="C-EU" device="C0603" value="36pF"/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="R0603" value="1M"/>
 <part name="SMV1236-1" library="SparkFun" deviceset="DIODE" device="SOD"/>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>

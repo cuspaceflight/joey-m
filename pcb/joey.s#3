@@ -9256,8 +9256,6 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="-115.57" y1="-27.94" x2="-120.65" y2="-27.94" width="0.1524" layer="91"/>
 <label x="-120.65" y="-27.94" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
-</net>
-<net name="N$16" class="0">
 <segment>
 <pinref part="X1" gate="G$1" pin="VBUS"/>
 <pinref part="USB_ESD" gate="G$1" pin="VBUS"/>

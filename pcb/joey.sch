@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -381,6 +381,20 @@ package type OT</description>
 <pin name="T1" x="-7.62" y="2.54" length="middle"/>
 <pin name="T2" x="-7.62" y="-2.54" length="middle"/>
 </symbol>
+<symbol name="TMP102">
+<wire x1="-10.16" y1="-7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-7.62" x2="7.62" y2="7.62" width="0.254" layer="94"/>
+<wire x1="7.62" y1="7.62" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="7.62" x2="-10.16" y2="-7.62" width="0.254" layer="94"/>
+<text x="-7.62" y="8.382" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="SCL" x="10.16" y="2.54" length="short" rot="R180"/>
+<pin name="GND" x="-12.7" y="-5.08" length="short"/>
+<pin name="ALERT" x="10.16" y="-2.54" length="short" rot="R180"/>
+<pin name="ADD0" x="10.16" y="-5.08" length="short" rot="R180"/>
+<pin name="VCC" x="-12.7" y="5.08" length="short"/>
+<pin name="SDA" x="10.16" y="5.08" length="short" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="MICRF112">
@@ -550,6 +564,26 @@ package type OT</description>
 <connects>
 <connect gate="G$1" pin="T1" pad="1"/>
 <connect gate="G$1" pin="T2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TMP100">
+<gates>
+<gate name="G$1" symbol="TMP102" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT23-6">
+<connects>
+<connect gate="G$1" pin="ADD0" pad="5"/>
+<connect gate="G$1" pin="ALERT" pad="3"/>
+<connect gate="G$1" pin="GND" pad="2"/>
+<connect gate="G$1" pin="SCL" pad="1"/>
+<connect gate="G$1" pin="SDA" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="4"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -1673,17 +1707,6 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <vertex x="1.7119" y="-0.0101" curve="-90.012967"/>
 </polygon>
 </package>
-<package name="SOT563">
-<wire x1="0.8" y1="-0.6" x2="0.8" y2="0.6" width="0.127" layer="21"/>
-<wire x1="-0.8" y1="-0.6" x2="-0.8" y2="0.6" width="0.127" layer="21"/>
-<wire x1="-0.6" y1="-0.2" x2="-0.6" y2="0.2" width="0.127" layer="21"/>
-<smd name="5" x="0" y="0.66" dx="0.25" dy="0.4" layer="1"/>
-<smd name="2" x="0" y="-0.66" dx="0.25" dy="0.4" layer="1"/>
-<smd name="3" x="0.5" y="-0.66" dx="0.25" dy="0.4" layer="1"/>
-<smd name="1" x="-0.5" y="-0.66" dx="0.25" dy="0.4" layer="1"/>
-<smd name="4" x="0.5" y="0.66" dx="0.25" dy="0.4" layer="1"/>
-<smd name="6" x="-0.5" y="0.67" dx="0.25" dy="0.4" layer="1"/>
-</package>
 <package name="USB-A-H">
 <description>&lt;b&gt;USB Series A Hole Mounted&lt;/b&gt;</description>
 <wire x1="-17.8" y1="6" x2="-17.8" y2="-6" width="0.2032" layer="51"/>
@@ -2199,20 +2222,6 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <vertex x="-2.921" y="-2.413"/>
 <vertex x="-2.413" y="-2.921"/>
 </polygon>
-</symbol>
-<symbol name="TMP102">
-<wire x1="-10.16" y1="-7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="7.62" y1="-7.62" x2="7.62" y2="7.62" width="0.254" layer="94"/>
-<wire x1="7.62" y1="7.62" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
-<wire x1="-10.16" y1="7.62" x2="-10.16" y2="-7.62" width="0.254" layer="94"/>
-<text x="-7.62" y="8.382" size="1.778" layer="95">&gt;NAME</text>
-<text x="-7.62" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="SCL" x="10.16" y="2.54" length="short" rot="R180"/>
-<pin name="GND" x="-12.7" y="-5.08" length="short"/>
-<pin name="ALERT" x="10.16" y="-2.54" length="short" rot="R180"/>
-<pin name="ADD0" x="10.16" y="-5.08" length="short" rot="R180"/>
-<pin name="VCC" x="-12.7" y="5.08" length="short"/>
-<pin name="SDA" x="10.16" y="5.08" length="short" rot="R180"/>
 </symbol>
 <symbol name="USB">
 <wire x1="5.08" y1="8.89" x2="0" y2="8.89" width="0.254" layer="94"/>
@@ -2844,26 +2853,6 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <connects>
 <connect gate="G$1" pin="A" pad="A"/>
 <connect gate="G$1" pin="C" pad="K"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="TMP102" prefix="U">
-<gates>
-<gate name="G$1" symbol="TMP102" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SOT563">
-<connects>
-<connect gate="G$1" pin="ADD0" pad="4"/>
-<connect gate="G$1" pin="ALERT" pad="3"/>
-<connect gate="G$1" pin="GND" pad="2"/>
-<connect gate="G$1" pin="SCL" pad="1"/>
-<connect gate="G$1" pin="SDA" pad="6"/>
-<connect gate="G$1" pin="VCC" pad="5"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -8040,7 +8029,6 @@ DIN A3, landscape with extra doc field</description>
 <part name="GND27" library="SparkFun" deviceset="GND" device=""/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R0603" value="100R"/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="R0603" value="100R"/>
-<part name="U2" library="SparkFun" deviceset="TMP102" device=""/>
 <part name="R7" library="rcl" deviceset="R-EU_" device="R0603" value="4K7"/>
 <part name="R8" library="rcl" deviceset="R-EU_" device="R0603" value="4K7"/>
 <part name="P+8" library="SparkFun" deviceset="VCC" device=""/>
@@ -8080,6 +8068,7 @@ DIN A3, landscape with extra doc field</description>
 <part name="GND35" library="SparkFun" deviceset="GND" device=""/>
 <part name="P+3" library="SparkFun" deviceset="VCC" device=""/>
 <part name="P+13" library="SparkFun" deviceset="VCC" device=""/>
+<part name="U$12" library="jonsowman" deviceset="TMP100" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8282,7 +8271,6 @@ DIN A3, landscape with extra doc field</description>
 <attribute name="NAME" x="-1.4986" y="-87.63" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="-1.778" y="-82.55" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U2" gate="G$1" x="-19.05" y="-19.05"/>
 <instance part="R7" gate="G$1" x="-121.92" y="-158.75" smashed="yes" rot="R90">
 <attribute name="NAME" x="-117.0686" y="-165.1" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="-117.348" y="-160.02" size="1.778" layer="96" rot="R90"/>
@@ -8361,6 +8349,7 @@ DIN A3, landscape with extra doc field</description>
 <instance part="GND35" gate="1" x="38.1" y="-110.49" smashed="yes" rot="R270"/>
 <instance part="P+3" gate="1" x="52.07" y="-109.22"/>
 <instance part="P+13" gate="1" x="199.39" y="22.86"/>
+<instance part="U$12" gate="G$1" x="-19.05" y="-19.05"/>
 </instances>
 <busses>
 </busses>
@@ -8559,19 +8548,19 @@ DIN A3, landscape with extra doc field</description>
 <wire x1="-5.08" y1="-96.52" x2="-5.08" y2="-99.06" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U2" gate="G$1" pin="GND"/>
 <wire x1="-31.75" y1="-24.13" x2="-34.29" y2="-24.13" width="0.1524" layer="91"/>
 <pinref part="GND28" gate="1" pin="GND"/>
 <wire x1="-34.29" y1="-24.13" x2="-34.29" y2="-26.67" width="0.1524" layer="91"/>
 <pinref part="C19" gate="G$1" pin="1"/>
 <wire x1="-34.29" y1="-22.86" x2="-34.29" y2="-24.13" width="0.1524" layer="91"/>
 <junction x="-34.29" y="-24.13"/>
+<pinref part="U$12" gate="G$1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="U2" gate="G$1" pin="ADD0"/>
 <wire x1="-8.89" y1="-24.13" x2="-6.35" y2="-24.13" width="0.1524" layer="91"/>
 <pinref part="GND29" gate="1" pin="GND"/>
 <wire x1="-6.35" y1="-24.13" x2="-6.35" y2="-26.67" width="0.1524" layer="91"/>
+<pinref part="U$12" gate="G$1" pin="ADD0"/>
 </segment>
 <segment>
 <pinref part="U$8" gate="G$1" pin="GND"/>
@@ -8695,11 +8684,11 @@ DIN A3, landscape with extra doc field</description>
 <segment>
 <pinref part="P+10" gate="1" pin="VCC"/>
 <wire x1="-34.29" y1="-11.43" x2="-34.29" y2="-13.97" width="0.1524" layer="91"/>
-<pinref part="U2" gate="G$1" pin="VCC"/>
 <wire x1="-34.29" y1="-13.97" x2="-31.75" y2="-13.97" width="0.1524" layer="91"/>
 <pinref part="C19" gate="G$1" pin="2"/>
 <wire x1="-34.29" y1="-15.24" x2="-34.29" y2="-13.97" width="0.1524" layer="91"/>
 <junction x="-34.29" y="-13.97"/>
+<pinref part="U$12" gate="G$1" pin="VCC"/>
 </segment>
 <segment>
 <pinref part="P+11" gate="1" pin="VCC"/>
@@ -9156,9 +9145,9 @@ DIN A3, landscape with extra doc field</description>
 <label x="-41.91" y="-66.04" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U2" gate="G$1" pin="SDA"/>
 <wire x1="-8.89" y1="-13.97" x2="-6.35" y2="-13.97" width="0.1524" layer="91"/>
 <label x="-6.35" y="-13.97" size="1.27" layer="95" xref="yes"/>
+<pinref part="U$12" gate="G$1" pin="SDA"/>
 </segment>
 <segment>
 <pinref part="R9" gate="G$1" pin="1"/>
@@ -9173,9 +9162,9 @@ DIN A3, landscape with extra doc field</description>
 <label x="-41.91" y="-68.58" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U2" gate="G$1" pin="SCL"/>
 <wire x1="-8.89" y1="-16.51" x2="-6.35" y2="-16.51" width="0.1524" layer="91"/>
 <label x="-6.35" y="-16.51" size="1.27" layer="95" xref="yes"/>
+<pinref part="U$12" gate="G$1" pin="SCL"/>
 </segment>
 <segment>
 <pinref part="R10" gate="G$1" pin="1"/>
