@@ -17,6 +17,7 @@
 1841236         1       HEADER, 2.54MM, PIN, 32WAY      PTH             £1.88
 1841971 	1 	13.56MHz XTAL 5x3mm      	SMD       	£0.59
 1640930         1       16.00MHz XTAL 5.3mm             SMD             £1.62
+1650686         1       BATT HOLDER AAA, LEADED         N/A             £1.20
 -- PASSIVES
 1469748         3       RESISTOR 10KR 0.1W              0603            £0.01
 1738931         2 	RESISTOR 0.1W 100KR       	0603      	£0.02
