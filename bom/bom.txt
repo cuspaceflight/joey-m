@@ -26,7 +26,7 @@
 2008358         4       RESISTOR 4K7                    0603            £0.01
 2008345         2       RESISTOR 22R                    0603            £0.01
 1833863         8 	CAPACITOR 100nF           	0603      	£0.01
-1463375         1 	CAPACITOR 10uF            	0603      	0.45
+1833804         1       CAPACITOR, 6.3V, 10UF           0603            £0.15
 1833809         4       CAPACITOR 1UF                   0603            £0.02
 1327675         1       CAPACITOR 10NF                  0603            £0.02
 1748739         1 	INDUCTOR 43nH             	0402      	£0.28
