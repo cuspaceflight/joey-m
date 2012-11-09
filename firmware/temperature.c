@@ -6,7 +6,13 @@
  * Jon Sowman 2012
  */
 
+#include <stdbool.h>
 #include "temperature.h"
+
+volatile bool tw_in_progress = false;
+uint8_t tw_byte_tx;
+volatile uint8_t tbuf[5];
+volatile uint8_t* ptr = tbuf;
 
 /**
  * Set up the TMP100 temperature sensor.
@@ -22,14 +28,27 @@ void temperature_init()
 }
 
 /**
+ * Turn the I2C interface 'off'.
+ */
+void temperature_deinit()
+{
+    TWCR &= ~(_BV(TWEN) | _BV(TWIE));
+}
+
+/**
  * Return the current temperature.
  */
 float temperature_read()
 {
-    // Become a master on the bus and transmit a start bit
-    TWCR |= _BV(TWINT) | _BV(TWSTA);
+}
 
-    // Check that the start was successfully sent
+void temperature_send_byte(uint8_t b)
+{
+    tw_in_progress = true;
+    tw_byte_tx = b;
+
+    // Clear the interrupt flag and begin the tranmission process
+    TWCR |= _BV(TWINT) | _BV(TWSTA);
 }
 
 /**
@@ -41,9 +60,33 @@ ISR(TWI_vect)
     switch(TWSR)
     {
         case TW_START_SENT:
-            // Transmit SLA+W (R/W bit (LSB) is 0 for W)
-            TWDR = TMP100_ADDR << 1;
+            if(tw_byte_tx) // if we are wanting to transmit (master txer)
+                TWDR = TMP100_ADDR | 0;
+            else // if we want to receive data (master rxer)
+                TWDR = TMP100_ADDR | 1;
             TWCR |= _BV(TWINT);
+            break;
+
+        case TW_SLAW_ACK:
+            // Transmit a data packet
+            TWDR = tw_byte_tx;
+            break;
+
+        case TW_SLAR_ACK:
+            // Enable ACKs from the AVR for incoming bytes
+            TWCR |= _BV(TWINT) | _BV(TWEA);
+            break;
+
+        case TW_WDATA_ACK:
+            // Byte successfully transmitted, send a stop condition
+            TWCR |= _BV(TWINT) | _BV(TWSTO);
+            tw_in_progress = false;
+            break;
+
+        case TW_RDATA_ACK:
+            // There is a byte to be read and we ack'ed it
+            *ptr++ = TWDR;
+            TWCR |= _BV(TWINT) | _BV(TWEA);
             break;
 
         default:
