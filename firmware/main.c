@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/eeprom.h>
+#include <avr/interrupt.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -18,6 +19,7 @@
 #include "led.h"
 #include "radio.h"
 #include "gps.h"
+#include "temperature.h"
 
 // 30kHz range on COARSE, 3kHz on FINE
 
@@ -32,10 +34,16 @@ int main()
     wdt_enable(WDTO_8S);
 
     // Start and configure all hardware peripherals
+    sei();
     led_init();
+    temperature_init();
     radio_init();
     gps_init();
     radio_enable();
+
+    led_set(LED_RED, 1);
+    temperature_read();
+    led_set(LED_RED, 0);
 
     // Set the radio shift and baud rate & chatter a bit so we can find Joey
     _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_434630);

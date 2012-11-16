@@ -15,7 +15,7 @@
 #define     TMP100_PTR_TMP          0x00
 #define     TMP100_PTR_CFG          0x01
 
-// Status codes for the onewire interface
+// Status codes for the TWI
 #define     TW_START_SENT           0x08
 #define     TW_RPT_START_SENT       0x10
 #define     TW_SLAW_ACK             0x18

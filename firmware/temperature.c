@@ -11,9 +11,10 @@
 #include <avr/interrupt.h>
 #include <stdbool.h>
 #include "temperature.h"
+#include "led.h"
 
 volatile bool tw_in_progress = false;
-uint8_t tw_byte_tx;
+uint8_t tw_byte_tx = 0xFF;
 volatile uint8_t tbuf[3];
 volatile uint8_t* ptr = tbuf;
 volatile uint8_t counter = 0;
@@ -44,6 +45,9 @@ void temperature_deinit()
  */
 float temperature_read()
 {
+    // Set the pointer register to the temperature register
+    tmp100_send_byte(0x00);
+
     // Empty the buffer and reset the pointer and counter
     ptr = tbuf;
     counter = 0;
@@ -76,7 +80,7 @@ void tmp100_send_byte(uint8_t b)
 void tmp100_read()
 {
     tw_in_progress = true;
-    tw_byte_tx = 0; // this is a a read op
+    tw_byte_tx = 0xFF; // this is a a read op
 
     // Clear the interrupt flag and begin the tranmission process
     TWCR |= _BV(TWINT) | _BV(TWSTA);
@@ -85,7 +89,7 @@ void tmp100_read()
 }
 
 /**
- * Interrupt for when the I2C interface fires an interrupt for whatever reason.
+ * ISR for the I2C interface when it fires an interrupt for whatever reason.
  */
 ISR(TWI_vect)
 {
@@ -93,11 +97,12 @@ ISR(TWI_vect)
     switch(TWSR)
     {
         case TW_START_SENT:
-            if(tw_byte_tx) // if we are wanting to transmit (master txer)
+            if(tw_byte_tx != 0xFF) // if we are wanting to transmit (master txer)
                 TWDR = TMP100_ADDR | 0;
             else // if we want to receive data (master rxer)
                 TWDR = TMP100_ADDR | 1;
             TWCR |= _BV(TWINT);
+            led_set(LED_RED, 0);
             break;
 
         case TW_SLAW_ACK:
