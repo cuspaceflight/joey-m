@@ -9,7 +9,7 @@
 #ifndef __TEMPERATURE_H__
 #define __TEMPERATURE_H__
 
-#define TMP100_ADDR         10010110
+#define TMP100_ADDR                 0b10010110
 
 // Pointer registers in the TMP100
 #define     TMP100_PTR_TMP          0x00
@@ -30,5 +30,7 @@
 
 void temperature_init(void);
 float temperature_read(void);
+void tmp100_send_byte(uint8_t b);
+void tmp100_read(void);
 
 #endif /* __TEMPERATURE_H__ */
