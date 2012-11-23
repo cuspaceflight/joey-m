@@ -41,9 +41,12 @@ int main()
     gps_init();
     radio_enable();
 
+    // FIXME
     // Some bits for testing the temp sensor
+    led_set(LED_RED, 1);
     temperature_read();
     led_set(LED_RED, 0);
+    while(1);
 
     // Set the radio shift and baud rate & chatter a bit so we can find Joey
     _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_434630);

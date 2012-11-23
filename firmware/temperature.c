@@ -47,11 +47,12 @@ void temperature_deinit()
 float temperature_read()
 {
     // Set the pointer register to the temperature register
-    tmp100_send_byte(0x00);
+    tmp100_send_byte(TMP100_PTR_TMP);
 
     // Empty the buffer and reset the pointer and counter
     ptr = tbuf;
     counter = 0;
+    tmp100_read();
 
     // Construct the value to be returned
     uint16_t tmp = (tbuf[0] << 8) | tbuf[1];
@@ -106,7 +107,6 @@ ISR(TWI_vect)
                 TWDR = TMP100_ADDR | 0;
             else // if we want to receive data (master rxer)
                 TWDR = TMP100_ADDR | 1;
-            led_set(LED_RED, 1);
 
             // Clear the start/stop bit generator and continue the transfer
             TWCR &= ~(_BV(TWSTA) | _BV(TWSTO));
@@ -117,10 +117,6 @@ ISR(TWI_vect)
         case TW_SLAW_ACK:
             TWDR = tw_byte_tx;
             TWCR |= _BV(TWINT) | _BV(TWEN);
-            break;
-
-        case 0x38:
-            led_set(LED_RED, 0);
             break;
 
         case TW_SLAR_ACK:
