@@ -29,6 +29,7 @@ void temperature_init()
     TWBR = 1;
 
     // Enable the I2C interface and enable interrupts
+    TWCR &= ~(_BV(TWSTO) | _BV(TWSTA));
     TWCR |= _BV(TWEN) | _BV(TWIE);
 }
 
@@ -37,7 +38,7 @@ void temperature_init()
  */
 void temperature_deinit()
 {
-    TWCR &= ~(_BV(TWEN) | _BV(TWIE));
+    TWCR &= ~(_BV(TWEN) | _BV(TWIE) | _BV(TWSTA) | _BV(TWSTO));
 }
 
 /**
@@ -67,7 +68,8 @@ void tmp100_send_byte(uint8_t b)
     tw_byte_tx = b;
 
     // Clear the interrupt flag and begin the tranmission process
-    tmp100_read();
+    TWCR &= ~_BV(TWSTO);
+    TWCR |= _BV(TWINT) | _BV(TWSTA);
 
     // Wait until the transmission is complete
     while(tw_in_progress);
@@ -83,6 +85,7 @@ void tmp100_read()
     tw_byte_tx = 0xFF; // this is a a read op
 
     // Clear the interrupt flag and begin the tranmission process
+    TWCR &= ~_BV(TWSTO);
     TWCR |= _BV(TWINT) | _BV(TWSTA);
 
     while(tw_in_progress);
@@ -96,31 +99,39 @@ ISR(TWI_vect)
     // What we do depends on the value of the status register
     switch(TWSR)
     {
+        // Start or repeated start, transmit SLAW or SLAR now
         case TW_START_SENT:
         case TW_RPT_START_SENT:
             if(tw_byte_tx != 0xFF) // if we are wanting to transmit (master txer)
                 TWDR = TMP100_ADDR | 0;
             else // if we want to receive data (master rxer)
                 TWDR = TMP100_ADDR | 1;
-            TWCR |= _BV(TWINT);
-            led_set(LED_RED, 0);
+            led_set(LED_RED, 1);
+
+            // Clear the start/stop bit generator and continue the transfer
+            TWCR &= ~(_BV(TWSTA) | _BV(TWSTO));
+            TWCR |= _BV(TWINT) | _BV(TWEN);
             break;
 
+        // SLAW has been ack'ed, transmit a DATA packet to the device
         case TW_SLAW_ACK:
-            // Transmit a data packet
             TWDR = tw_byte_tx;
-            TWCR |= _BV(TWINT);
+            TWCR |= _BV(TWINT) | _BV(TWEN);
+            break;
+
+        case 0x38:
+            led_set(LED_RED, 0);
             break;
 
         case TW_SLAR_ACK:
             // Enable ACKs from the AVR for incoming bytes
-            TWCR |= _BV(TWINT) | _BV(TWEA);
+            TWCR |= _BV(TWINT) | _BV(TWEA) | _BV(TWEN);
             break;
 
         case TW_WDATA_ACK:
             // Byte successfully transmitted, send a stop condition
             // TODO: We can only ever transmit a single byte!
-            TWCR |= _BV(TWINT) | _BV(TWSTO);
+            TWCR |= _BV(TWINT) | _BV(TWSTO) | _BV(TWEN);
             tw_in_progress = false;
             break;
 
