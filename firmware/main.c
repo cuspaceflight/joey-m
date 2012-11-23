@@ -41,6 +41,7 @@ int main()
     gps_init();
     radio_enable();
 
+    // Some bits for testing the temp sensor
     led_set(LED_RED, 1);
     temperature_read();
     led_set(LED_RED, 0);

@@ -25,7 +25,7 @@ volatile uint8_t counter = 0;
 void temperature_init()
 {
     // Set up the prescaler to give a clock frequency of 400kHz
-    TWSR |= _BV(TWPS1);
+    TWCR |= _BV(TWPS1);
     TWBR = 1;
 
     // Enable the I2C interface and enable interrupts
@@ -67,7 +67,7 @@ void tmp100_send_byte(uint8_t b)
     tw_byte_tx = b;
 
     // Clear the interrupt flag and begin the tranmission process
-    TWCR |= _BV(TWINT) | _BV(TWSTA);
+    tmp100_read();
 
     // Wait until the transmission is complete
     while(tw_in_progress);
@@ -97,6 +97,7 @@ ISR(TWI_vect)
     switch(TWSR)
     {
         case TW_START_SENT:
+        case TW_RPT_START_SENT:
             if(tw_byte_tx != 0xFF) // if we are wanting to transmit (master txer)
                 TWDR = TMP100_ADDR | 0;
             else // if we want to receive data (master rxer)
@@ -108,6 +109,7 @@ ISR(TWI_vect)
         case TW_SLAW_ACK:
             // Transmit a data packet
             TWDR = tw_byte_tx;
+            TWCR |= _BV(TWINT);
             break;
 
         case TW_SLAR_ACK:
@@ -117,6 +119,7 @@ ISR(TWI_vect)
 
         case TW_WDATA_ACK:
             // Byte successfully transmitted, send a stop condition
+            // TODO: We can only ever transmit a single byte!
             TWCR |= _BV(TWINT) | _BV(TWSTO);
             tw_in_progress = false;
             break;
@@ -137,6 +140,7 @@ ISR(TWI_vect)
         case TW_RDATA_NACK:
             // This is the final byte in the transmission, null terminate the
             // buffer
+            // TODO: We always receive two bytes, this should not be hardcoded
             *ptr++ = TWDR;
             *ptr++ = 0x00;
             counter++;

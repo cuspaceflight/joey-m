@@ -9,7 +9,7 @@
 #ifndef __TEMPERATURE_H__
 #define __TEMPERATURE_H__
 
-#define TMP100_ADDR                 0b10010110
+#define     TMP100_ADDR             0b10010110
 
 // Pointer registers in the TMP100
 #define     TMP100_PTR_TMP          0x00
