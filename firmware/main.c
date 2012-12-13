@@ -30,8 +30,8 @@ int main()
 {
     // Disable, configure, and start the watchdog timer
     wdt_disable();
-    wdt_reset();
-    wdt_enable(WDTO_8S);
+    /*wdt_reset();
+    wdt_enable(WDTO_8S);*/
 
     // Start and configure all hardware peripherals
     sei();
@@ -41,24 +41,26 @@ int main()
     gps_init();
     radio_enable();
 
-    // FIXME
-    // Some bits for testing the temp sensor
-    led_set(LED_RED, 1);
-    temperature_read();
-    led_set(LED_RED, 0);
-    while(1);
-
-    // Set the radio shift and baud rate & chatter a bit so we can find Joey
+    // Set the radio shift and baud rate
     _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_434630);
     _radio_dac_write(RADIO_FINE, 0);
     radio_set_shift(RADIO_SHIFT_425);
     radio_set_baud(RADIO_BAUD_50);
+
+    while(1)
+    {
+        float f = temperature_read();
+        sprintf(s, "temp is %.2f\n", f);
+        radio_transmit_string(s);
+    }
+
+    // Radio chatter
     for(uint8_t i = 0; i < 5; i++)
     {
         radio_chatter();
         wdt_reset();
     }
-
+    
     int32_t lat = 0, lon = 0, alt = 0;
     uint8_t hour = 0, minute = 0, second = 0, lock = 0, sats = 0;
 
@@ -70,8 +72,7 @@ int main()
         uint32_t tick = eeprom_read_dword(&ticks) + 1;
 
         // Get temperature from the TMP102
-        //int16_t temperature = temperature_read();
-        int16_t temperature = 0;
+        float temperature = temperature_read();
 
         // Check that we're in airborne <1g mode
         if( gps_check_nav() != 0x06 ) led_set(LED_RED, 1);
@@ -91,7 +92,7 @@ int main()
         double lon_fmt = (double)lon / 10000000.0;
         alt /= 1000;
 
-        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%d,%u,%x",
+        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%.1f,%u,%x",
             tick, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
             sats, lock);
         radio_chatter();

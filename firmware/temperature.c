@@ -10,8 +10,11 @@
 #include <util/twi.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
+#include <string.h>
+#include <util/delay.h>
 #include "temperature.h"
 #include "led.h"
+#include "radio.h"
 
 volatile bool tw_in_progress = false;
 uint8_t tw_byte_tx = 0xFF;
@@ -47,16 +50,18 @@ void temperature_deinit()
 float temperature_read()
 {
     // Set the pointer register to the temperature register
+    temperature_init();
     tmp100_send_byte(TMP100_PTR_TMP);
 
     // Empty the buffer and reset the pointer and counter
     ptr = tbuf;
     counter = 0;
     tmp100_read();
+    temperature_deinit();
 
     // Construct the value to be returned
     uint16_t tmp = (tbuf[0] << 8) | tbuf[1];
-    return (float)(tmp >> 4);
+    return (float)(tmp >> 4) * 0.0625;
 }
 
 /**
@@ -97,8 +102,9 @@ void tmp100_read()
  */
 ISR(TWI_vect)
 {
+    uint8_t twsr = TWSR;
     // What we do depends on the value of the status register
-    switch(TWSR)
+    switch(twsr)
     {
         // Start or repeated start, transmit SLAW or SLAR now
         case TW_START_SENT:
@@ -154,7 +160,17 @@ ISR(TWI_vect)
             tw_in_progress = false;
             break;
 
+        // No relevant state information, TWINT=0. Why are we here?
+        case TW_NO_STATE_INFO:
+            break;
+
+        // Bus error due to illegal start/stop condition. Bus is released by
+        // hardware.
+        case TW_BUS_ERROR:
+            led_set(LED_RED, 1);
+
         default:
+            led_set(LED_RED, 1);
             break;
     }
     return;

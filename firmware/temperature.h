@@ -27,6 +27,8 @@
 #define     TW_SLAR_NACK            0x48
 #define     TW_RDATA_ACK            0x50
 #define     TW_RDATA_NACK           0x58
+#define     TW_NO_STATE_INFO        0xF8
+#define     TW_BUS_ERROR            0x00
 
 void temperature_init(void);
 float temperature_read(void);
