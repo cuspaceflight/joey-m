@@ -60,7 +60,7 @@ float temperature_read()
     temperature_deinit();
 
     // Construct the value to be returned
-    uint16_t tmp = (tbuf[0] << 8) | tbuf[1];
+    int16_t tmp = (tbuf[0] << 8) | tbuf[1];
     return (float)(tmp >> 4) * 0.0625;
 }
 

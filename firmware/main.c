@@ -47,13 +47,6 @@ int main()
     radio_set_shift(RADIO_SHIFT_425);
     radio_set_baud(RADIO_BAUD_50);
 
-    while(1)
-    {
-        float f = temperature_read();
-        sprintf(s, "temp is %.2f\n", f);
-        radio_transmit_string(s);
-    }
-
     // Radio chatter
     for(uint8_t i = 0; i < 5; i++)
     {
@@ -71,7 +64,7 @@ int main()
         // Get the current system tick and increment
         uint32_t tick = eeprom_read_dword(&ticks) + 1;
 
-        // Get temperature from the TMP102
+        // Get temperature from the TMP100
         float temperature = temperature_read();
 
         // Check that we're in airborne <1g mode
