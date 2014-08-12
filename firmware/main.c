@@ -30,8 +30,8 @@ int main()
 {
     // Disable, configure, and start the watchdog timer
     wdt_disable();
-    /*wdt_reset();
-    wdt_enable(WDTO_8S);*/
+    wdt_reset();
+    wdt_enable(WDTO_8S);
 
     // Start and configure all hardware peripherals
     sei();
