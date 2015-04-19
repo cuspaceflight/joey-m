@@ -16,6 +16,7 @@ CLOCK      = 16000000
 PROGRAMMER = -c usbasp
 SOURCES	   = $(wildcard *.c)
 FUSES      = -U hfuse:w:0xd7:m -U lfuse:w:0xf7:m
+CALLSIGN   = JOEY4
 
 # End configuration
 
@@ -23,7 +24,7 @@ OBJECTS = $(SOURCES:.c=.o)
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -C /etc/avrdude.conf
 
 # Disable warning of strict-aliasing since uIP type-puns
-COMPILE = avr-gcc -Wall -Os -fno-strict-aliasing -gdwarf-2 -std=gnu99 -Wl,-u,vfprintf -lprintf_flt -lm -DF_CPU=$(CLOCK) -mmcu=atmega328p
+COMPILE = avr-gcc -Wall -Os -fno-strict-aliasing -gdwarf-2 -std=gnu99 -Wl,-u,vfprintf -lprintf_flt -lm -DF_CPU=$(CLOCK) -mmcu=atmega328p -DCALLSIGN=\"$(CALLSIGN)\"
 
 # symbolic targets:
 all:	main.hex
