@@ -19,7 +19,6 @@
 #include "led.h"
 #include "radio.h"
 #include "gps.h"
-#include "temperature.h"
 
 // 30kHz range on COARSE, 3kHz on FINE
 
@@ -36,7 +35,6 @@ int main()
     // Start and configure all hardware peripherals
     sei();
     led_init();
-    temperature_init();
     radio_init();
     gps_init();
     radio_enable();
@@ -64,9 +62,6 @@ int main()
         // Get the current system tick and increment
         uint32_t tick = eeprom_read_dword(&ticks) + 1;
 
-        // Get temperature from the TMP100
-        float temperature = temperature_read();
-
         // Check that we're in airborne <1g mode
         if( gps_check_nav() != 0x06 ) led_set(LED_RED, 1);
 
@@ -85,8 +80,8 @@ int main()
         double lon_fmt = (double)lon / 10000000.0;
         alt /= 1000;
 
-        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%.1f,%u,%x",
-            tick, hour, minute, second, lat_fmt, lon_fmt, alt, temperature,
+        sprintf(s, "$$JOEY,%lu,%02u:%02u:%02u,%02.7f,%03.7f,%ld,%u,%x",
+            tick, hour, minute, second, lat_fmt, lon_fmt, alt,
             sats, lock);
         radio_chatter();
         radio_transmit_sentence(s);

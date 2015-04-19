@@ -13,7 +13,7 @@
 
 DEVICE     = m328p
 CLOCK      = 16000000
-PROGRAMMER = -c avrispmkII -P usb -B 1
+PROGRAMMER = -c usbasp
 SOURCES	   = $(wildcard *.c)
 FUSES      = -U hfuse:w:0xd7:m -U lfuse:w:0xf7:m
 
