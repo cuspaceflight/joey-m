@@ -40,7 +40,7 @@ int main()
     radio_enable();
 
     // Set the radio shift and baud rate
-    _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ_434630);
+    _radio_dac_write(RADIO_COARSE, RADIO_CENTER_FREQ);
     _radio_dac_write(RADIO_FINE, 0);
     radio_set_shift(RADIO_SHIFT_425);
     radio_set_baud(RADIO_BAUD_50);

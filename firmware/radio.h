@@ -29,7 +29,6 @@
 
 #define RADIO_BAUD_50               156
 #define RADIO_BAUD_300              26
-#define RADIO_CENTER_FREQ_434630    0X0C00
 #define RADIO_SHIFT_425             0x0900
 
 #define DSP_SAMPLES     50
