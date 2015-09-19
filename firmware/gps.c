@@ -162,7 +162,7 @@ uint8_t gps_check_nav(void)
         ack[i] = _gps_get_byte();
 
     // If we got a NACK, then return 0xFF
-    if( buf[3] == 0x00 ) return 0xFF;
+    if( ack[3] == 0x00 ) return 0xFF;
 
     // Return the navigation mode and let the caller analyse it
     return buf[8];
@@ -230,4 +230,5 @@ void _gps_flush_buffer(void)
 {
     uint8_t dummy;
     while ( UCSR0A & _BV(RXC0) ) dummy = UDR0;
+    (void)dummy;
 }
